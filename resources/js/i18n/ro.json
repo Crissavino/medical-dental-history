@@ -315,7 +315,8 @@
     "when_label": "când",
     "drug_and_dose": "Medicament & doză",
     "pdf_subtitle": "Conform modelelor CMDR/CMS Ilfov",
-    "pdf_footer": "Confidențial – fișă medicală. Copierea sau divulgarea neautorizată este interzisă."
+    "pdf_footer": "Confidențial – fișă medicală. Copierea sau divulgarea neautorizată este interzisă.",
+    "not_applicable": "Nu se aplică — continuați la pasul următor"
   },
   "audit": {
     "title": "Jurnal de audit",

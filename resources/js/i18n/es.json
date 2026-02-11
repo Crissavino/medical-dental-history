@@ -315,7 +315,8 @@
     "when_label": "cuándo",
     "drug_and_dose": "Medicamento y dosis",
     "pdf_subtitle": "Conforme a los modelos CMDR/CMS Ilfov",
-    "pdf_footer": "Confidencial – ficha médica. Se prohíbe la copia o divulgación no autorizada."
+    "pdf_footer": "Confidencial – ficha médica. Se prohíbe la copia o divulgación no autorizada.",
+    "not_applicable": "No corresponde — continúe al siguiente paso"
   },
   "audit": {
     "title": "Registro de auditoría",

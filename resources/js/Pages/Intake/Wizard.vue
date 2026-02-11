@@ -382,6 +382,46 @@ const diseaseCategories = computed(() => [
         ],
     },
 ]);
+
+// --- "Not applicable" helpers for empty sections ---
+const isStep3Empty = computed(() =>
+    form.form_data.allergies.drug_allergies.length === 0 &&
+    form.form_data.allergies.non_drug_allergies.length === 0
+);
+
+const isStep4Empty = computed(() =>
+    form.form_data.current_treatment.medications.length === 0 &&
+    !form.form_data.current_treatment.antibiotics_last_2_weeks &&
+    !form.form_data.current_treatment.anticoagulants &&
+    !form.form_data.current_treatment.bisphosphonates
+);
+
+const isStep5Empty = computed(() => {
+    const d = form.form_data.diseases;
+    for (const cat of diseaseCategories.value) {
+        for (const field of cat.fields) {
+            if ((d as any)[cat.key]?.[field.key]) return false;
+        }
+    }
+    return !d.neoplasms && !d.other_diseases;
+});
+
+const isStep6Empty = computed(() =>
+    !form.form_data.surgical_history.previous_surgeries &&
+    !form.form_data.surgical_history.transfusions &&
+    !form.form_data.surgical_history.surgery_complications &&
+    !form.form_data.dental_history.anesthesia_types.local &&
+    !form.form_data.dental_history.anesthesia_types.plexal &&
+    !form.form_data.dental_history.anesthesia_types.troncular &&
+    !form.form_data.dental_history.anesthesia_types.general &&
+    !form.form_data.dental_history.adverse_reactions
+);
+
+const isStep7Empty = computed(() =>
+    !form.form_data.habits.tobacco &&
+    !form.form_data.habits.alcohol &&
+    !form.form_data.habits.drugs
+);
 </script>
 
 <template>
@@ -552,6 +592,14 @@ const diseaseCategories = computed(() => [
                                 </div>
                                 {{ t('anamnesis.menstruating') }}
                             </button>
+
+                            <!-- Not applicable hint -->
+                            <p
+                                v-if="!form.form_data.special_situations.pregnant && !form.form_data.special_situations.menstruating"
+                                class="mt-2 text-center text-sm italic text-gray-400"
+                            >
+                                {{ t('anamnesis.not_applicable') }}
+                            </p>
                         </div>
                     </div>
                 </div>
@@ -612,6 +660,10 @@ const diseaseCategories = computed(() => [
                                 </span>
                             </div>
                         </div>
+
+                        <p v-if="isStep3Empty" class="mt-6 text-center text-sm italic text-gray-400">
+                            {{ t('anamnesis.not_applicable') }}
+                        </p>
                     </div>
                 </div>
 
@@ -707,7 +759,7 @@ const diseaseCategories = computed(() => [
                         </div>
 
                         <!-- Bisphosphonates -->
-                        <div class="rounded-lg border border-gray-200 p-4">
+                        <div class="mb-8 rounded-lg border border-gray-200 p-4">
                             <button
                                 type="button"
                                 @click="form.form_data.current_treatment.bisphosphonates = !form.form_data.current_treatment.bisphosphonates"
@@ -759,6 +811,10 @@ const diseaseCategories = computed(() => [
                                 </div>
                             </div>
                         </div>
+
+                        <p v-if="isStep4Empty" class="mt-2 text-center text-sm italic text-gray-400">
+                            {{ t('anamnesis.not_applicable') }}
+                        </p>
                     </div>
                 </div>
 
@@ -858,6 +914,10 @@ const diseaseCategories = computed(() => [
                                     <textarea v-model="form.form_data.diseases.other_diseases_details" rows="2" class="block w-full rounded-lg border-gray-300 text-sm shadow-sm focus:border-primary-500 focus:ring-primary-500" :placeholder="t('anamnesis.other_diseases_details')" />
                                 </div>
                             </div>
+
+                            <p v-if="isStep5Empty" class="mt-2 text-center text-sm italic text-gray-400">
+                                {{ t('anamnesis.not_applicable') }}
+                            </p>
                         </div>
                     </div>
                 </div>
@@ -953,6 +1013,10 @@ const diseaseCategories = computed(() => [
                             </div>
                         </div>
                     </div>
+
+                    <p v-if="isStep6Empty" class="mt-2 text-center text-sm italic text-gray-400">
+                        {{ t('anamnesis.not_applicable') }}
+                    </p>
                 </div>
 
                 <!-- ═══════════════════════════════════════════════════ -->
@@ -1049,6 +1113,9 @@ const diseaseCategories = computed(() => [
                                     </div>
                                 </div>
                             </div>
+                            <p v-if="isStep7Empty" class="mt-2 text-center text-sm italic text-gray-400">
+                                {{ t('anamnesis.not_applicable') }}
+                            </p>
                         </div>
                     </div>
                 </div>

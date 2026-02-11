@@ -315,7 +315,8 @@
     "when_label": "when",
     "drug_and_dose": "Drug & dose",
     "pdf_subtitle": "Aligned with CMDR/CMS Ilfov structure",
-    "pdf_footer": "Confidential – medical record. Unauthorized copying or disclosure is prohibited."
+    "pdf_footer": "Confidential – medical record. Unauthorized copying or disclosure is prohibited.",
+    "not_applicable": "Not applicable — continue to the next step"
   },
   "audit": {
     "title": "Audit Logs",
