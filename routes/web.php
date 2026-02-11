@@ -22,17 +22,9 @@ Route::middleware('throttle:intake')->group(function () {
     Route::get('/intake-complete', [IntakeController::class, 'complete'])->name('intake.complete');
 });
 
-// Dashboard
+// Home — redirect to dashboard or login
 Route::get('/', function () {
-    if (auth()->check()) {
-        return redirect()->route('dashboard');
-    }
-    return Inertia::render('Welcome', [
-        'canLogin' => Route::has('login'),
-        'canRegister' => Route::has('register'),
-        'laravelVersion' => Application::VERSION,
-        'phpVersion' => PHP_VERSION,
-    ]);
+    return redirect()->route(auth()->check() ? 'dashboard' : 'login');
 })->name('home');
 
 Route::get('/dashboard', function () {
