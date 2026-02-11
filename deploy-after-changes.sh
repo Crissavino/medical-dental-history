@@ -16,6 +16,9 @@ fi
 
 echo "==> Using: $DC"
 
+echo "==> Pulling latest code..."
+git pull origin master
+
 echo "==> Building Docker image..."
 $DC -f "$COMPOSE_FILE" build
 
