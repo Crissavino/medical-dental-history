@@ -316,7 +316,12 @@
     "drug_and_dose": "Medicament & doză",
     "pdf_subtitle": "Conform modelelor CMDR/CMS Ilfov",
     "pdf_footer": "Confidențial – fișă medicală. Copierea sau divulgarea neautorizată este interzisă.",
-    "not_applicable": "Nu se aplică — continuați la pasul următor"
+    "not_applicable": "Nu se aplică — continuați la pasul următor",
+    "signature_pad_title": "Semnătură",
+    "signature_clear": "Șterge",
+    "signature_type_name": "Tastați numele",
+    "signature_draw": "Desenați semnătura",
+    "signature_placeholder": "Numele complet"
   },
   "audit": {
     "title": "Jurnal de audit",

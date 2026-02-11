@@ -19,6 +19,7 @@ class AnamnesisVersion extends Model
         'consent_ip',
         'language',
         'recorded_by',
+        'signature_data',
     ];
 
     protected function casts(): array

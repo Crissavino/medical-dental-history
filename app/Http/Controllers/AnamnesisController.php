@@ -32,6 +32,7 @@ class AnamnesisController extends Controller
             'consent_ip' => $request->ip(),
             'language' => $validated['language'],
             'recorded_by' => auth()->id(),
+            'signature_data' => $validated['signature_data'] ?? null,
         ]);
 
         return redirect()->route('patients.show', $patient)

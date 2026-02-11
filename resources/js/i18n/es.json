@@ -316,7 +316,12 @@
     "drug_and_dose": "Medicamento y dosis",
     "pdf_subtitle": "Conforme a los modelos CMDR/CMS Ilfov",
     "pdf_footer": "Confidencial – ficha médica. Se prohíbe la copia o divulgación no autorizada.",
-    "not_applicable": "No corresponde — continúe al siguiente paso"
+    "not_applicable": "No corresponde — continúe al siguiente paso",
+    "signature_pad_title": "Firma",
+    "signature_clear": "Limpiar",
+    "signature_type_name": "Escribir nombre",
+    "signature_draw": "Dibujar firma",
+    "signature_placeholder": "Nombre completo"
   },
   "audit": {
     "title": "Registro de auditoría",

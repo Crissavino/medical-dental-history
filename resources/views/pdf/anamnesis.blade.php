@@ -467,7 +467,11 @@
         </td>
         <td>
             <div>{{ $t['anamnesis.consent_signature'] }}:</div>
-            <div class="sig-line"></div>
+            @if(!empty($version->signature_data))
+                <div style="margin-top: 4px;"><img src="{{ $version->signature_data }}" style="max-height: 50px; max-width: 100%;" /></div>
+            @else
+                <div class="sig-line"></div>
+            @endif
         </td>
     </tr>
     <tr>

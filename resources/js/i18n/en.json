@@ -316,7 +316,12 @@
     "drug_and_dose": "Drug & dose",
     "pdf_subtitle": "Aligned with CMDR/CMS Ilfov structure",
     "pdf_footer": "Confidential – medical record. Unauthorized copying or disclosure is prohibited.",
-    "not_applicable": "Not applicable — continue to the next step"
+    "not_applicable": "Not applicable — continue to the next step",
+    "signature_pad_title": "Signature",
+    "signature_clear": "Clear",
+    "signature_type_name": "Type your name",
+    "signature_draw": "Draw signature",
+    "signature_placeholder": "Full name"
   },
   "audit": {
     "title": "Audit Logs",

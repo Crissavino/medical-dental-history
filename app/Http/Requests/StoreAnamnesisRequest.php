@@ -100,6 +100,7 @@ class StoreAnamnesisRequest extends FormRequest
 
             'consent_given' => ['required', 'accepted'],
             'language' => ['required', 'in:en,ro,es'],
+            'signature_data' => ['nullable', 'string', 'max:500000'],
         ];
     }
 }

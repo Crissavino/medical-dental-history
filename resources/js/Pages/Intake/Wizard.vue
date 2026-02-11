@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue';
+import { ref, computed, onMounted, onBeforeUnmount, watch, nextTick } from 'vue';
 import { Head, useForm } from '@inertiajs/vue3';
 import { useI18n } from 'vue-i18n';
+import SignaturePadLib from 'signature_pad';
 import InputLabel from '@/Components/InputLabel.vue';
 import InputError from '@/Components/InputError.vue';
 import type { Patient, AnamnesisVersion, Medication, AntibioticDetail } from '@/types';
@@ -185,6 +186,7 @@ const form = useForm({
     },
     consent_given: false,
     language: locale.value as 'en' | 'ro' | 'es',
+    signature_data: null as string | null,
 });
 
 // --- Tag input helpers ---
@@ -227,6 +229,122 @@ function removeAntibiotic(i: number) {
     form.form_data.current_treatment.antibiotic_details.splice(i, 1);
 }
 
+// --- Signature pad ---
+const signatureCanvas = ref<HTMLCanvasElement | null>(null);
+const signatureContainer = ref<HTMLDivElement | null>(null);
+let signaturePad: SignaturePadLib | null = null;
+const signatureMode = ref<'draw' | 'type'>('draw');
+const typedName = ref('');
+
+function initSignaturePad() {
+    if (signatureCanvas.value) {
+        signaturePad = new SignaturePadLib(signatureCanvas.value, {
+            backgroundColor: 'rgb(255, 255, 255)',
+        });
+        resizeCanvas();
+    }
+}
+
+function resizeCanvas() {
+    if (!signatureCanvas.value || !signatureContainer.value) return;
+    const canvas = signatureCanvas.value;
+    const container = signatureContainer.value;
+    const ratio = Math.max(window.devicePixelRatio || 1, 1);
+    canvas.width = container.offsetWidth * ratio;
+    canvas.height = 160 * ratio;
+    canvas.style.width = container.offsetWidth + 'px';
+    canvas.style.height = '160px';
+    canvas.getContext('2d')?.scale(ratio, ratio);
+    signaturePad?.clear();
+}
+
+function clearSignature() {
+    signaturePad?.clear();
+    typedName.value = '';
+    form.signature_data = null;
+}
+
+function renderTypedSignature() {
+    if (!signatureCanvas.value) return;
+    const canvas = signatureCanvas.value;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+    const ratio = Math.max(window.devicePixelRatio || 1, 1);
+    ctx.clearRect(0, 0, canvas.width / ratio, canvas.height / ratio);
+    ctx.fillStyle = 'rgb(255, 255, 255)';
+    ctx.fillRect(0, 0, canvas.width / ratio, canvas.height / ratio);
+    if (typedName.value.trim()) {
+        ctx.fillStyle = '#1a1a1a';
+        ctx.font = 'italic 32px "Georgia", "Times New Roman", serif';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(typedName.value, (canvas.width / ratio) / 2, (canvas.height / ratio) / 2);
+    }
+}
+
+watch(typedName, () => {
+    if (signatureMode.value === 'type') {
+        renderTypedSignature();
+    }
+});
+
+watch(signatureMode, async (newMode) => {
+    await nextTick();
+    if (newMode === 'draw') {
+        initSignaturePad();
+    } else {
+        signaturePad?.off();
+        renderTypedSignature();
+    }
+});
+
+function captureSignature() {
+    if (!signatureCanvas.value) return;
+    if (signatureMode.value === 'draw' && signaturePad && !signaturePad.isEmpty()) {
+        form.signature_data = signaturePad.toDataURL('image/png');
+    } else if (signatureMode.value === 'type' && typedName.value.trim()) {
+        form.signature_data = signatureCanvas.value.toDataURL('image/png');
+    } else {
+        form.signature_data = null;
+    }
+}
+
+let resizeHandler: (() => void) | null = null;
+
+onMounted(() => {
+    resizeHandler = () => {
+        if (signatureMode.value === 'draw') {
+            resizeCanvas();
+        } else {
+            resizeCanvas();
+            signaturePad?.off();
+            renderTypedSignature();
+        }
+    };
+    window.addEventListener('resize', resizeHandler);
+});
+
+onBeforeUnmount(() => {
+    if (resizeHandler) {
+        window.removeEventListener('resize', resizeHandler);
+    }
+    signaturePad?.off();
+});
+
+// Initialize signature pad when entering step 8
+watch(currentStep, async (step) => {
+    if (step === 8) {
+        await nextTick();
+        if (signatureMode.value === 'draw') {
+            initSignaturePad();
+        } else {
+            resizeCanvas();
+            signaturePad?.off();
+            renderTypedSignature();
+        }
+    }
+});
+
 // --- Navigation ---
 function nextStep() {
     if (currentStep.value < totalSteps) {
@@ -242,6 +360,7 @@ function prevStep() {
 }
 
 function submit() {
+    captureSignature();
     form.post(route('intake.store'), { preserveScroll: false });
 }
 
@@ -1155,6 +1274,66 @@ const isStep7Empty = computed(() =>
                                 {{ t('anamnesis.consent_agree') }}
                             </button>
                             <InputError :message="form.errors.consent_given" class="mt-2" />
+                        </div>
+
+                        <!-- Signature Pad -->
+                        <div class="mt-8">
+                            <h3 class="mb-4 text-lg font-semibold text-gray-900">{{ t('anamnesis.signature_pad_title') }}</h3>
+
+                            <!-- Mode toggle -->
+                            <div class="mb-4 flex gap-2">
+                                <button
+                                    type="button"
+                                    @click="signatureMode = 'draw'"
+                                    :class="[
+                                        signatureMode === 'draw'
+                                            ? 'bg-primary-600 text-white'
+                                            : 'bg-gray-100 text-gray-700 hover:bg-gray-200',
+                                        'rounded-lg px-4 py-2 text-sm font-medium transition-colors',
+                                    ]"
+                                >
+                                    {{ t('anamnesis.signature_draw') }}
+                                </button>
+                                <button
+                                    type="button"
+                                    @click="signatureMode = 'type'"
+                                    :class="[
+                                        signatureMode === 'type'
+                                            ? 'bg-primary-600 text-white'
+                                            : 'bg-gray-100 text-gray-700 hover:bg-gray-200',
+                                        'rounded-lg px-4 py-2 text-sm font-medium transition-colors',
+                                    ]"
+                                >
+                                    {{ t('anamnesis.signature_type_name') }}
+                                </button>
+                            </div>
+
+                            <!-- Type name input (shown in type mode) -->
+                            <div v-if="signatureMode === 'type'" class="mb-3">
+                                <input
+                                    v-model="typedName"
+                                    type="text"
+                                    class="block w-full rounded-lg border-gray-300 text-base shadow-sm focus:border-primary-500 focus:ring-primary-500"
+                                    :placeholder="t('anamnesis.signature_placeholder')"
+                                />
+                            </div>
+
+                            <!-- Canvas container -->
+                            <div ref="signatureContainer" class="relative rounded-lg border-2 border-dashed border-gray-300 bg-white">
+                                <canvas ref="signatureCanvas" class="w-full touch-none" style="height: 160px" />
+                            </div>
+
+                            <!-- Clear button -->
+                            <div class="mt-2 flex justify-end">
+                                <button
+                                    type="button"
+                                    @click="clearSignature"
+                                    class="inline-flex items-center gap-1 rounded-lg bg-gray-100 px-3 py-1.5 text-xs font-medium text-gray-700 hover:bg-gray-200 transition-colors"
+                                >
+                                    <TrashIcon class="h-4 w-4" />
+                                    {{ t('anamnesis.signature_clear') }}
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>

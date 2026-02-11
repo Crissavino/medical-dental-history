@@ -49,6 +49,7 @@ class IntakeController extends Controller
             'consent_given_at' => now(),
             'consent_ip' => $request->ip(),
             'language' => $validated['language'],
+            'signature_data' => $validated['signature_data'] ?? null,
         ]);
 
         return redirect()->route('patients.show', $patient)
