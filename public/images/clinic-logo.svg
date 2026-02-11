@@ -1,15 +1,17 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 80" width="400" height="80">
-  <!-- Stylized D with smile curve -->
-  <g transform="translate(10, 5)">
-    <!-- Letter D -->
-    <text x="0" y="48" font-family="Georgia, 'DejaVu Serif', serif" font-size="52" font-weight="bold" fill="#2563eb">D</text>
-    <!-- Smile curve under the D -->
-    <path d="M 8 55 Q 22 68 36 55" stroke="#2563eb" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 440 80" width="440" height="80">
+  <g transform="translate(3, 3)">
+    <!-- Geometric D letterform (filled with white inner space) -->
+    <path d="
+      M 0 0 L 0 74 L 32 74 C 66 74 76 55 76 37 C 76 19 66 0 32 0 Z
+      M 10 10 L 30 10 C 56 10 64 24 64 37 C 64 50 56 64 30 64 L 10 64 Z
+    " fill="#1a1a1a" fill-rule="evenodd"/>
+    <!-- Smile curve inside D -->
+    <path d="M 16 50 Q 38 70 60 50" fill="none" stroke="#1a1a1a" stroke-width="3" stroke-linecap="round"/>
   </g>
   <!-- Vertical separator -->
-  <line x1="58" y1="12" x2="58" y2="65" stroke="#94a3b8" stroke-width="1.5"/>
-  <!-- Text: DENTAL WELLNESS -->
-  <text x="70" y="32" font-family="'DejaVu Sans', Arial, Helvetica, sans-serif" font-size="22" font-weight="bold" fill="#1e293b" letter-spacing="3">DENTAL WELLNESS</text>
-  <!-- Text: DRA. PILAR ARRESEIGOR -->
-  <text x="70" y="55" font-family="'DejaVu Sans', Arial, Helvetica, sans-serif" font-size="13" fill="#64748b" letter-spacing="1.5">DRA. PILAR ARRESEIGOR</text>
+  <line x1="92" y1="10" x2="92" y2="70" stroke="#aaa" stroke-width="1.2"/>
+  <!-- DENTAL WELLNESS -->
+  <text x="106" y="36" font-family="'DejaVu Sans', Arial, Helvetica, sans-serif" font-size="24" font-weight="bold" fill="#1a1a1a" letter-spacing="1.5">DENTAL WELLNESS</text>
+  <!-- DRA. PILAR ARRESEIGOR -->
+  <text x="106" y="58" font-family="'DejaVu Sans', Arial, Helvetica, sans-serif" font-size="13" fill="#1a1a1a" letter-spacing="1">DRA. PILAR ARRESEIGOR</text>
 </svg>
