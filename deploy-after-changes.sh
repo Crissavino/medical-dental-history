@@ -3,7 +3,6 @@ set -euo pipefail
 
 COMPOSE_FILE="docker-compose.prod.yml"
 APP_SERVICE="app"
-MYSQL_SERVICE="mysql"
 
 # Detect docker compose command (v2 plugin vs v1 standalone)
 if docker compose version &>/dev/null; then
@@ -17,26 +16,10 @@ fi
 
 echo "==> Using: $DC"
 
-echo "==> Pulling latest code from main..."
-git pull origin master
-
 echo "==> Building Docker image..."
 $DC -f "$COMPOSE_FILE" build
 
-echo "==> Backing up database..."
-TIMESTAMP=$(date +%Y%m%d_%H%M%S)
-BACKUP_DIR="./backups"
-mkdir -p "$BACKUP_DIR"
-if $DC -f "$COMPOSE_FILE" ps "$MYSQL_SERVICE" --status running -q 2>/dev/null | grep -q .; then
-    $DC -f "$COMPOSE_FILE" exec -T "$MYSQL_SERVICE" \
-        mysqldump -u"${DB_USERNAME:-clinical}" -p"${DB_PASSWORD}" "${DB_DATABASE:-clinical_history}" \
-        | gzip > "${BACKUP_DIR}/backup_${TIMESTAMP}.gz"
-    echo "    Backup saved to ${BACKUP_DIR}/backup_${TIMESTAMP}.gz"
-else
-    echo "    MySQL not running yet, skipping backup."
-fi
-
-echo "==> Starting services..."
+echo "==> Restarting services..."
 $DC -f "$COMPOSE_FILE" up -d
 
 echo "==> Waiting for app to be ready..."
