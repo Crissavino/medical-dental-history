@@ -48,6 +48,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         zip \
         bcmath \
         opcache \
+    && pecl install redis \
+    && docker-php-ext-enable redis \
     && rm -rf /var/lib/apt/lists/*
 
 # OPcache production settings
