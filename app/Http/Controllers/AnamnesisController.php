@@ -38,10 +38,10 @@ class AnamnesisController extends Controller
             ->with('success', 'Anamnesis saved successfully.');
     }
 
-    public function pdf(AnamnesisVersion $anamnesisVersion, AnamnesisPdfService $pdfService): HttpResponse
+    public function pdf(AnamnesisVersion $anamnesisVersion, AnamnesisPdfService $pdfService, ?string $lang = null): HttpResponse
     {
-        $pdf = $pdfService->generate($anamnesisVersion);
-        $filename = $pdfService->filename($anamnesisVersion);
+        $pdf = $pdfService->generate($anamnesisVersion, $lang);
+        $filename = $pdfService->filename($anamnesisVersion, $lang);
 
         return $pdf->download($filename);
     }

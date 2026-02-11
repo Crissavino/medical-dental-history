@@ -16,7 +16,7 @@ import {
 } from '@heroicons/vue/24/outline';
 
 const { t } = useI18n();
-const { isMobile } = useResponsive();
+const { isDesktop } = useResponsive();
 
 const props = defineProps<{
     patients: PaginatedResponse<Patient>;
@@ -80,7 +80,7 @@ function formatDate(dateStr?: string): string {
         </div>
 
         <!-- Desktop table view -->
-        <div v-if="!isMobile" class="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
+        <div v-if="isDesktop" class="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
             <table class="min-w-full divide-y divide-gray-200">
                 <thead class="bg-gray-50">
                     <tr>

@@ -39,7 +39,7 @@ export interface AnamnesisVersion {
     consent_given: boolean;
     consent_given_at?: string;
     consent_ip?: string;
-    language: 'en' | 'ro';
+    language: 'en' | 'ro' | 'es';
     recorded_by?: number;
     recorder?: User;
     created_at: string;

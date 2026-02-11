@@ -96,7 +96,7 @@ onBeforeUnmount(() => {
     <Teleport to="body">
         <div
             v-if="open"
-            class="relative z-50 lg:hidden"
+            class="relative z-50 md:hidden"
             role="dialog"
             aria-modal="true"
         >
@@ -204,7 +204,7 @@ onBeforeUnmount(() => {
     </Teleport>
 
     <!-- Desktop sidebar (static) -->
-    <div class="hidden lg:fixed lg:inset-y-0 lg:z-50 lg:flex lg:w-72 lg:flex-col">
+    <div class="hidden md:fixed md:inset-y-0 md:z-50 md:flex md:w-72 md:flex-col">
         <div class="flex grow flex-col gap-y-5 overflow-y-auto border-r border-gray-200 bg-white px-6 pb-4">
             <div class="flex h-16 shrink-0 items-center">
                 <Link :href="route('dashboard')">

@@ -32,7 +32,8 @@
     "previous": "Anterior",
     "language": "Limbă",
     "english": "Engleză",
-    "romanian": "Română"
+    "romanian": "Română",
+    "spanish": "Spaniolă"
   },
   "dashboard": {
     "welcome": "Bine ai revenit",
@@ -301,7 +302,20 @@
     "consent_signature": "Semnătura pacientului",
     "submit": "Trimite istoricul medical",
     "submitting": "Se trimite...",
-    "download_pdf": "Descarcă PDF"
+    "download_pdf": "Descarcă PDF",
+    "yes_word": "Da",
+    "no_word": "Nu",
+    "congenital_diseases": "Boli congenitale",
+    "occupational_diseases": "Boli profesionale",
+    "dentist_label": "Medic stomatolog",
+    "patient_label": "Pacient",
+    "signature_label": "Semnătura",
+    "name_label": "Nume",
+    "route_label": "Cale",
+    "when_label": "când",
+    "drug_and_dose": "Medicament & doză",
+    "pdf_subtitle": "Conform modelelor CMDR/CMS Ilfov",
+    "pdf_footer": "Confidențial – fișă medicală. Copierea sau divulgarea neautorizată este interzisă."
   },
   "audit": {
     "title": "Jurnal de audit",

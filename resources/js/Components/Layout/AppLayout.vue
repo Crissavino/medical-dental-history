@@ -52,7 +52,14 @@ interface LocaleOption {
 const locales: LocaleOption[] = [
     { code: 'en', label: 'EN' },
     { code: 'ro', label: 'RO' },
+    { code: 'es', label: 'ES' },
 ];
+
+const localeNames: Record<string, string> = {
+    en: 'app.english',
+    ro: 'app.romanian',
+    es: 'app.spanish',
+};
 
 function switchLocale(code: string) {
     locale.value = code;
@@ -119,15 +126,15 @@ onBeforeUnmount(() => {
         <Sidebar :open="sidebarOpen" @close="sidebarOpen = false" />
 
         <!-- Main content area -->
-        <div class="lg:pl-72">
+        <div class="md:pl-72">
             <!-- Top navigation bar -->
             <div
-                class="sticky top-0 z-40 flex h-16 shrink-0 items-center gap-x-4 border-b border-gray-200 bg-white px-4 shadow-sm sm:gap-x-6 sm:px-6 lg:px-8"
+                class="sticky top-0 z-40 flex h-16 shrink-0 items-center gap-x-4 border-b border-gray-200 bg-white px-4 shadow-sm sm:gap-x-6 sm:px-6 md:px-8"
             >
                 <!-- Mobile sidebar toggle -->
                 <button
                     type="button"
-                    class="-m-2.5 p-2.5 text-gray-700 lg:hidden"
+                    class="-m-2.5 p-2.5 text-gray-700 md:hidden"
                     @click="sidebarOpen = true"
                 >
                     <span class="sr-only">Open sidebar</span>
@@ -135,17 +142,17 @@ onBeforeUnmount(() => {
                 </button>
 
                 <!-- Separator (mobile only) -->
-                <div class="h-6 w-px bg-gray-200 lg:hidden" aria-hidden="true" />
+                <div class="h-6 w-px bg-gray-200 md:hidden" aria-hidden="true" />
 
                 <!-- Top bar content -->
-                <div class="flex flex-1 items-center justify-end gap-x-4 self-stretch lg:gap-x-6">
+                <div class="flex flex-1 items-center justify-end gap-x-4 self-stretch md:gap-x-6">
                     <!-- Page title slot -->
                     <div class="flex flex-1 items-center">
                         <slot name="header" />
                     </div>
 
                     <!-- Right side actions -->
-                    <div class="flex items-center gap-x-4 lg:gap-x-6">
+                    <div class="flex items-center gap-x-4 md:gap-x-6">
                         <!-- Language switcher -->
                         <div ref="langMenuRef" class="relative">
                             <button
@@ -178,7 +185,7 @@ onBeforeUnmount(() => {
                                         @click="switchLocale(loc.code)"
                                     >
                                         <span>
-                                            {{ loc.code === 'en' ? t('app.english') : t('app.romanian') }}
+                                            {{ t(localeNames[loc.code]) }}
                                         </span>
                                         <CheckIcon
                                             v-if="locale === loc.code"
@@ -191,7 +198,7 @@ onBeforeUnmount(() => {
                         </div>
 
                         <!-- Separator -->
-                        <div class="hidden h-6 w-px bg-gray-200 lg:block" aria-hidden="true" />
+                        <div class="hidden h-6 w-px bg-gray-200 md:block" aria-hidden="true" />
 
                         <!-- User dropdown -->
                         <div ref="userMenuRef" class="relative">
@@ -205,7 +212,7 @@ onBeforeUnmount(() => {
                                 >
                                     {{ user.name.charAt(0).toUpperCase() }}
                                 </span>
-                                <span class="hidden lg:flex lg:items-center">
+                                <span class="hidden md:flex md:items-center">
                                     <span
                                         class="ml-3 text-sm font-semibold leading-6 text-gray-900"
                                         aria-hidden="true"
@@ -268,7 +275,7 @@ onBeforeUnmount(() => {
             >
                 <div
                     v-if="showFlash && (flash?.success || flash?.error)"
-                    class="mx-4 mt-4 sm:mx-6 lg:mx-8"
+                    class="mx-4 mt-4 sm:mx-6 md:mx-8"
                 >
                     <!-- Success flash -->
                     <div
@@ -327,8 +334,8 @@ onBeforeUnmount(() => {
             </transition>
 
             <!-- Page content -->
-            <main class="pb-20 lg:pb-0">
-                <div class="px-4 py-6 sm:px-6 lg:px-8">
+            <main class="pb-20 md:pb-0">
+                <div class="px-4 py-6 sm:px-6 md:px-8">
                     <slot />
                 </div>
             </main>

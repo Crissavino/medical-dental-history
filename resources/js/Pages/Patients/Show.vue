@@ -28,6 +28,19 @@ const props = defineProps<{
 
 const showDeleteModal = ref(false);
 const showUploadModal = ref(false);
+const pdfMenuOpenId = ref<number | null>(null);
+
+function togglePdfMenu(versionId: number) {
+    pdfMenuOpenId.value = pdfMenuOpenId.value === versionId ? null : versionId;
+}
+
+function closePdfMenu() {
+    pdfMenuOpenId.value = null;
+}
+
+function closePdfMenuDelayed() {
+    setTimeout(() => closePdfMenu(), 150);
+}
 const expandedAnamnesisId = ref<number | null>(props.selectedAnamnesis?.id ?? null);
 const currentTab = ref(expandedAnamnesisId.value ? 1 : 0);
 
@@ -341,13 +354,40 @@ function confirmDelete() {
                                     >
                                         <PencilSquareIcon class="h-5 w-5" />
                                     </Link>
-                                    <a
-                                        :href="route('anamnesis.pdf', version.id as any)"
-                                        class="rounded-md p-1.5 text-gray-400 hover:bg-gray-100 hover:text-primary-600 transition-colors"
-                                        :title="t('anamnesis.download_pdf')"
-                                    >
-                                        <ArrowDownTrayIcon class="h-5 w-5" />
-                                    </a>
+                                    <div class="relative">
+                                        <button
+                                            type="button"
+                                            @click="togglePdfMenu(version.id)"
+                                            @blur="closePdfMenuDelayed"
+                                            class="rounded-md p-1.5 text-gray-400 hover:bg-gray-100 hover:text-primary-600 transition-colors"
+                                            :title="t('anamnesis.download_pdf')"
+                                        >
+                                            <ArrowDownTrayIcon class="h-5 w-5" />
+                                        </button>
+                                        <div
+                                            v-if="pdfMenuOpenId === version.id"
+                                            class="absolute right-0 z-10 mt-1 w-36 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black/5"
+                                        >
+                                            <a
+                                                :href="route('anamnesis.pdf', { anamnesisVersion: version.id as any, lang: 'en' })"
+                                                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-t-md"
+                                            >
+                                                Download EN
+                                            </a>
+                                            <a
+                                                :href="route('anamnesis.pdf', { anamnesisVersion: version.id as any, lang: 'ro' })"
+                                                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                                            >
+                                                Download RO
+                                            </a>
+                                            <a
+                                                :href="route('anamnesis.pdf', { anamnesisVersion: version.id as any, lang: 'es' })"
+                                                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-b-md"
+                                            >
+                                                Download ES
+                                            </a>
+                                        </div>
+                                    </div>
                                     <button
                                         type="button"
                                         @click="expandedAnamnesisId = expandedAnamnesisId === version.id ? null : version.id"

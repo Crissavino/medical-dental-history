@@ -14,8 +14,10 @@ defineProps<{
     canRegister?: boolean;
 }>();
 
+const localeOrder = ['en', 'ro', 'es'] as const;
 function toggleLocale() {
-    locale.value = locale.value === 'en' ? 'ro' : 'en';
+    const idx = localeOrder.indexOf(locale.value as typeof localeOrder[number]);
+    locale.value = localeOrder[(idx + 1) % localeOrder.length];
 }
 
 const features = [
@@ -45,7 +47,7 @@ const features = [
                         @click="toggleLocale"
                         class="rounded-md px-3 py-1.5 text-sm font-medium text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-colors"
                     >
-                        {{ locale === 'en' ? 'RO' : 'EN' }}
+                        {{ localeOrder[(localeOrder.indexOf(locale as typeof localeOrder[number]) + 1) % localeOrder.length].toUpperCase() }}
                     </button>
                     <Link
                         v-if="canLogin"

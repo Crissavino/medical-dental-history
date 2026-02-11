@@ -63,7 +63,7 @@ function isActive(routeName: string): boolean {
 </script>
 
 <template>
-    <div class="fixed inset-x-0 bottom-0 z-40 border-t border-gray-200 bg-white lg:hidden">
+    <div class="fixed inset-x-0 bottom-0 z-40 border-t border-gray-200 bg-white md:hidden">
         <nav class="flex items-center justify-around">
             <Link
                 v-for="item in items"

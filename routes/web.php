@@ -62,7 +62,8 @@ Route::middleware('auth')->group(function () {
         ->name('anamnesis.store');
     Route::get('/anamnesis/{anamnesisVersion}', [AnamnesisController::class, 'show'])
         ->name('anamnesis.show');
-    Route::get('/anamnesis/{anamnesisVersion}/pdf', [AnamnesisController::class, 'pdf'])
+    Route::get('/anamnesis/{anamnesisVersion}/pdf/{lang?}', [AnamnesisController::class, 'pdf'])
+        ->where('lang', 'en|ro|es')
         ->name('anamnesis.pdf');
 
     // Encounters (nested under patient for create, standalone for show/edit)

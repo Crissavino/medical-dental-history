@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 80" width="400" height="80">
+  <!-- Stylized D with smile curve -->
+  <g transform="translate(10, 5)">
+    <!-- Letter D -->
+    <text x="0" y="48" font-family="Georgia, 'DejaVu Serif', serif" font-size="52" font-weight="bold" fill="#2563eb">D</text>
+    <!-- Smile curve under the D -->
+    <path d="M 8 55 Q 22 68 36 55" stroke="#2563eb" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+  </g>
+  <!-- Vertical separator -->
+  <line x1="58" y1="12" x2="58" y2="65" stroke="#94a3b8" stroke-width="1.5"/>
+  <!-- Text: DENTAL WELLNESS -->
+  <text x="70" y="32" font-family="'DejaVu Sans', Arial, Helvetica, sans-serif" font-size="22" font-weight="bold" fill="#1e293b" letter-spacing="3">DENTAL WELLNESS</text>
+  <!-- Text: DRA. PILAR ARRESEIGOR -->
+  <text x="70" y="55" font-family="'DejaVu Sans', Arial, Helvetica, sans-serif" font-size="13" fill="#64748b" letter-spacing="1.5">DRA. PILAR ARRESEIGOR</text>
+</svg>

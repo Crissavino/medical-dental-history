@@ -223,7 +223,7 @@ const surfaces = [
                                     <TrashIcon class="h-4 w-4" />
                                 </button>
                             </div>
-                            <div class="grid grid-cols-1 gap-4 sm:grid-cols-3">
+                            <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
                                 <div>
                                     <InputLabel :value="t('treatment.tooth_number')" />
                                     <div class="mt-1 flex gap-2">

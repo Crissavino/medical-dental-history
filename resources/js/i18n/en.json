@@ -32,7 +32,8 @@
     "previous": "Previous",
     "language": "Language",
     "english": "English",
-    "romanian": "Romanian"
+    "romanian": "Romanian",
+    "spanish": "Spanish"
   },
   "dashboard": {
     "welcome": "Welcome back",
@@ -301,7 +302,20 @@
     "consent_signature": "Patient signature",
     "submit": "Submit Medical History",
     "submitting": "Submitting...",
-    "download_pdf": "Download PDF"
+    "download_pdf": "Download PDF",
+    "yes_word": "Yes",
+    "no_word": "No",
+    "congenital_diseases": "Congenital diseases",
+    "occupational_diseases": "Occupational diseases",
+    "dentist_label": "Dentist",
+    "patient_label": "Patient",
+    "signature_label": "Signature",
+    "name_label": "Name",
+    "route_label": "Route",
+    "when_label": "when",
+    "drug_and_dose": "Drug & dose",
+    "pdf_subtitle": "Aligned with CMDR/CMS Ilfov structure",
+    "pdf_footer": "Confidential – medical record. Unauthorized copying or disclosure is prohibited."
   },
   "audit": {
     "title": "Audit Logs",

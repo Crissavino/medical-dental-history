@@ -8,15 +8,17 @@ use Illuminate\Support\Arr;
 
 class AnamnesisPdfService
 {
-    public function generate(AnamnesisVersion $anamnesisVersion): \Barryvdh\DomPDF\PDF
+    public function generate(AnamnesisVersion $anamnesisVersion, ?string $langOverride = null): \Barryvdh\DomPDF\PDF
     {
         $anamnesisVersion->load('patient');
 
-        $lang = $anamnesisVersion->language ?? 'en';
+        $lang = $langOverride ?? $anamnesisVersion->language ?? 'en';
         $translations = $this->loadTranslations($lang);
 
         $patient = $anamnesisVersion->patient;
         $formData = $anamnesisVersion->form_data ?? [];
+
+        $logoBase64 = $this->loadLogoBase64();
 
         $pdf = Pdf::loadView('pdf.anamnesis', [
             't' => $translations,
@@ -24,6 +26,7 @@ class AnamnesisPdfService
             'formData' => $formData,
             'version' => $anamnesisVersion,
             'lang' => $lang,
+            'logoBase64' => $logoBase64,
         ]);
 
         $pdf->setPaper('A4');
@@ -33,14 +36,25 @@ class AnamnesisPdfService
         return $pdf;
     }
 
-    public function filename(AnamnesisVersion $anamnesisVersion): string
+    public function filename(AnamnesisVersion $anamnesisVersion, ?string $langOverride = null): string
     {
         $anamnesisVersion->load('patient');
         $identifier = $anamnesisVersion->patient->identifier;
         $version = $anamnesisVersion->version;
-        $lang = $anamnesisVersion->language ?? 'en';
+        $lang = $langOverride ?? $anamnesisVersion->language ?? 'en';
 
         return "anamnesis-{$identifier}-v{$version}-{$lang}.pdf";
+    }
+
+    private function loadLogoBase64(): string
+    {
+        $svgPath = public_path('images/clinic-logo.svg');
+
+        if (file_exists($svgPath)) {
+            return base64_encode(file_get_contents($svgPath));
+        }
+
+        return '';
     }
 
     private function loadTranslations(string $lang): array

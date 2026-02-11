@@ -24,7 +24,7 @@ const props = defineProps<{
 function switchLocale(code: string) {
     locale.value = code;
     localStorage.setItem('locale', code);
-    form.language = code as 'en' | 'ro';
+    form.language = code as 'en' | 'ro' | 'es';
 }
 
 const currentStep = ref(1);
@@ -184,7 +184,7 @@ const form = useForm({
         },
     },
     consent_given: false,
-    language: locale.value as 'en' | 'ro',
+    language: locale.value as 'en' | 'ro' | 'es',
 });
 
 // --- Tag input helpers ---
@@ -405,7 +405,7 @@ const diseaseCategories = computed(() => [
                 <!-- Language toggle -->
                 <div class="flex items-center gap-1 rounded-lg border border-gray-200 p-0.5">
                     <button
-                        v-for="lang in ['en', 'ro']"
+                        v-for="lang in ['en', 'ro', 'es']"
                         :key="lang"
                         type="button"
                         @click="switchLocale(lang)"
@@ -783,11 +783,11 @@ const diseaseCategories = computed(() => [
                                                 (form.form_data.diseases as any)[cat.key][field.key]
                                                     ? 'border-primary-500 bg-primary-50 text-primary-700 ring-1 ring-primary-500'
                                                     : 'border-gray-300 bg-white text-gray-700 hover:bg-gray-50',
-                                                'flex w-full items-center gap-3 rounded-lg border px-3 py-2.5 text-left text-sm font-medium transition-colors',
+                                                'flex w-full items-center gap-3 rounded-lg border px-4 py-3 text-left text-sm font-medium transition-colors',
                                             ]"
                                         >
-                                            <div :class="[(form.form_data.diseases as any)[cat.key][field.key] ? 'border-primary-600 bg-primary-600' : 'border-gray-300 bg-white', 'flex h-4 w-4 shrink-0 items-center justify-center rounded border transition-colors']">
-                                                <CheckIcon v-if="(form.form_data.diseases as any)[cat.key][field.key]" class="h-3 w-3 text-white" />
+                                            <div :class="[(form.form_data.diseases as any)[cat.key][field.key] ? 'border-primary-600 bg-primary-600' : 'border-gray-300 bg-white', 'flex h-5 w-5 shrink-0 items-center justify-center rounded border transition-colors']">
+                                                <CheckIcon v-if="(form.form_data.diseases as any)[cat.key][field.key]" class="h-3.5 w-3.5 text-white" />
                                             </div>
                                             {{ field.label }}
                                         </button>
@@ -824,11 +824,11 @@ const diseaseCategories = computed(() => [
                                         form.form_data.diseases.neoplasms
                                             ? 'border-primary-500 bg-primary-50 text-primary-700 ring-1 ring-primary-500'
                                             : 'border-gray-300 bg-white text-gray-700 hover:bg-gray-50',
-                                        'flex w-full items-center gap-3 rounded-lg border px-3 py-2.5 text-left text-sm font-medium transition-colors',
+                                        'flex w-full items-center gap-3 rounded-lg border px-4 py-3 text-left text-sm font-medium transition-colors',
                                     ]"
                                 >
-                                    <div :class="[form.form_data.diseases.neoplasms ? 'border-primary-600 bg-primary-600' : 'border-gray-300 bg-white', 'flex h-4 w-4 shrink-0 items-center justify-center rounded border transition-colors']">
-                                        <CheckIcon v-if="form.form_data.diseases.neoplasms" class="h-3 w-3 text-white" />
+                                    <div :class="[form.form_data.diseases.neoplasms ? 'border-primary-600 bg-primary-600' : 'border-gray-300 bg-white', 'flex h-5 w-5 shrink-0 items-center justify-center rounded border transition-colors']">
+                                        <CheckIcon v-if="form.form_data.diseases.neoplasms" class="h-3.5 w-3.5 text-white" />
                                     </div>
                                     {{ t('anamnesis.diseases_neoplasms') }}
                                 </button>
@@ -846,11 +846,11 @@ const diseaseCategories = computed(() => [
                                         form.form_data.diseases.other_diseases
                                             ? 'border-primary-500 bg-primary-50 text-primary-700 ring-1 ring-primary-500'
                                             : 'border-gray-300 bg-white text-gray-700 hover:bg-gray-50',
-                                        'flex w-full items-center gap-3 rounded-lg border px-3 py-2.5 text-left text-sm font-medium transition-colors',
+                                        'flex w-full items-center gap-3 rounded-lg border px-4 py-3 text-left text-sm font-medium transition-colors',
                                     ]"
                                 >
-                                    <div :class="[form.form_data.diseases.other_diseases ? 'border-primary-600 bg-primary-600' : 'border-gray-300 bg-white', 'flex h-4 w-4 shrink-0 items-center justify-center rounded border transition-colors']">
-                                        <CheckIcon v-if="form.form_data.diseases.other_diseases" class="h-3 w-3 text-white" />
+                                    <div :class="[form.form_data.diseases.other_diseases ? 'border-primary-600 bg-primary-600' : 'border-gray-300 bg-white', 'flex h-5 w-5 shrink-0 items-center justify-center rounded border transition-colors']">
+                                        <CheckIcon v-if="form.form_data.diseases.other_diseases" class="h-3.5 w-3.5 text-white" />
                                     </div>
                                     {{ t('anamnesis.diseases_other') }}
                                 </button>

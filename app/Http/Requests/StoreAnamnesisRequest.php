@@ -99,7 +99,7 @@ class StoreAnamnesisRequest extends FormRequest
             'form_data.habits.drugs_duration' => ['nullable', 'string', 'max:100'],
 
             'consent_given' => ['required', 'accepted'],
-            'language' => ['required', 'in:en,ro'],
+            'language' => ['required', 'in:en,ro,es'],
         ];
     }
 }

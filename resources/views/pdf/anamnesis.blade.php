@@ -4,38 +4,40 @@
     <meta charset="UTF-8">
     <style>
         @page {
-            margin: 20mm 15mm 20mm 15mm;
+            margin: 18mm 15mm 18mm 15mm;
         }
         body {
             font-family: 'DejaVu Sans', sans-serif;
             font-size: 9pt;
             color: #1a1a1a;
-            line-height: 1.4;
+            line-height: 1.45;
+        }
+        .logo-area {
+            text-align: center;
+            margin-bottom: 8px;
+        }
+        .logo-area img {
+            height: 50px;
         }
         h1 {
             font-size: 14pt;
             text-align: center;
-            margin: 0 0 2px 0;
-        }
-        h2 {
-            font-size: 10pt;
-            background-color: #e8e8e8;
-            padding: 4px 8px;
-            margin: 10px 0 6px 0;
-            border-left: 3px solid #4a4a4a;
-        }
-        .clinic-name {
-            text-align: center;
-            font-size: 11pt;
+            margin: 6px 0 2px 0;
             font-weight: bold;
-            margin-bottom: 4px;
-            color: #333;
         }
         .subtitle {
             text-align: center;
             font-size: 8pt;
-            color: #666;
+            font-style: italic;
+            color: #555;
             margin-bottom: 12px;
+        }
+        .section-title {
+            font-size: 10pt;
+            font-weight: bold;
+            margin: 12px 0 5px 0;
+            padding: 3px 0;
+            border-bottom: 1px solid #333;
         }
         .patient-table {
             width: 100%;
@@ -43,111 +45,137 @@
             margin-bottom: 10px;
         }
         .patient-table td {
-            padding: 3px 6px;
-            border: 1px solid #ccc;
+            padding: 4px 6px;
+            border: 1px solid #999;
             font-size: 9pt;
         }
         .patient-table .label {
-            background-color: #f5f5f5;
+            background-color: #f0f0f0;
             font-weight: bold;
             width: 30%;
         }
-        .check {
-            font-size: 10pt;
-        }
-        .check-row {
-            margin: 2px 0;
-        }
-        .inline-field {
-            display: inline;
-            color: #333;
+        .inline-section {
+            margin: 3px 0;
+            font-size: 9pt;
+            line-height: 1.6;
         }
         .field-value {
             color: #0055aa;
+            text-decoration: underline;
         }
-        .meds-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 4px 0;
+        .field-blank {
+            display: inline-block;
+            min-width: 80px;
+            border-bottom: 1px solid #999;
         }
-        .meds-table th, .meds-table td {
-            padding: 3px 6px;
-            border: 1px solid #ccc;
-            font-size: 8pt;
-            text-align: left;
-        }
-        .meds-table th {
-            background-color: #f5f5f5;
-            font-weight: bold;
-        }
-        .diseases-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 4px 0;
-        }
-        .diseases-table td {
-            padding: 2px 4px;
-            border: 1px solid #ddd;
-            font-size: 8pt;
-            vertical-align: top;
-        }
-        .diseases-table .cat-header {
-            background-color: #f0f0f0;
-            font-weight: bold;
+        .disease-line {
+            margin: 2px 0;
             font-size: 8.5pt;
-        }
-        .consent-box {
-            border: 1px solid #999;
-            padding: 8px;
-            margin: 10px 0;
-            font-size: 8pt;
             line-height: 1.5;
         }
-        .consent-title {
+        .disease-label {
             font-weight: bold;
             font-size: 9pt;
-            margin-bottom: 4px;
         }
-        .signature-area {
-            margin-top: 20px;
-            width: 100%;
+        .consent-box {
+            border: 1px solid #666;
+            padding: 10px 12px;
+            margin: 12px 0;
+            font-size: 8pt;
+            line-height: 1.6;
         }
-        .signature-area td {
-            padding: 4px;
-            width: 50%;
+        .consent-box .consent-title {
+            font-weight: bold;
             font-size: 9pt;
+            margin-bottom: 6px;
         }
-        .signature-line {
+        .consent-box ul {
+            margin: 4px 0 4px 16px;
+            padding: 0;
+        }
+        .consent-box li {
+            margin-bottom: 2px;
+        }
+        .signature-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 16px;
+        }
+        .signature-table td {
+            border: 1px solid #999;
+            padding: 6px 10px;
+            font-size: 9pt;
+            width: 50%;
+            vertical-align: top;
+        }
+        .signature-table .sig-header {
+            font-weight: bold;
+            text-align: center;
+            background-color: #f0f0f0;
+        }
+        .sig-line {
             border-bottom: 1px solid #333;
-            height: 30px;
-            margin-top: 10px;
+            height: 28px;
+            margin-top: 4px;
         }
         .footer-note {
             font-size: 7pt;
-            color: #888;
+            color: #666;
             text-align: center;
-            margin-top: 15px;
-            border-top: 1px solid #ddd;
-            padding-top: 6px;
+            margin-top: 14px;
+            border-top: 1px solid #ccc;
+            padding-top: 5px;
+            font-style: italic;
         }
         .page-break {
             page-break-before: always;
         }
-        .habit-row td {
-            padding: 3px 6px;
-            border: 1px solid #ccc;
+        .page-header {
+            text-align: center;
             font-size: 8pt;
+            color: #888;
+            margin-bottom: 8px;
         }
     </style>
 </head>
 <body>
 
-{{-- ========== PAGE 1 ========== --}}
-<div class="clinic-name">{{ $t['anamnesis.clinic_name'] }}</div>
-<h1>{{ $t['anamnesis.title'] }}</h1>
-<div class="subtitle">{{ $t['anamnesis.version'] }} {{ $version->version }} &mdash; {{ $version->created_at->format('d/m/Y H:i') }}</div>
+@php
+    // Checkbox helper
+    $chk = function($val) { return !empty($val) ? '☑' : '☐'; };
 
-{{-- Patient details --}}
+    // Join array or return dash
+    $joinOrDash = function($arr) {
+        if (!empty($arr) && is_array($arr)) {
+            return implode(', ', array_filter($arr));
+        }
+        return '___';
+    };
+
+    $yes = $t['anamnesis.yes_word'];
+    $no  = $t['anamnesis.no_word'];
+
+    $ss = $formData['special_situations'] ?? [];
+    $al = $formData['allergies'] ?? [];
+    $ct = $formData['current_treatment'] ?? [];
+    $diseases = $formData['diseases'] ?? [];
+    $sh = $formData['surgical_history'] ?? [];
+    $dh = $formData['dental_history'] ?? [];
+    $hab = $formData['habits'] ?? [];
+@endphp
+
+{{-- ========== PAGE 1 ========== --}}
+
+{{-- Logo --}}
+<div class="logo-area">
+    <img src="data:image/svg+xml;base64,{{ $logoBase64 }}" alt="Dental Wellness">
+</div>
+
+{{-- Title --}}
+<h1>{{ $t['anamnesis.title'] }}</h1>
+<div class="subtitle">{{ $t['anamnesis.pdf_subtitle'] }}</div>
+
+{{-- Patient Details --}}
 <table class="patient-table">
     <tr>
         <td class="label">{{ $t['anamnesis.patient_full_name'] }}</td>
@@ -155,157 +183,121 @@
     </tr>
     <tr>
         <td class="label">{{ $t['anamnesis.patient_cnp_passport'] }}</td>
-        <td>{{ $patient->cnp ?? '---' }}</td>
+        <td>{{ $patient->cnp ?? '___' }}</td>
     </tr>
     <tr>
         <td class="label">{{ $t['anamnesis.patient_home_address'] }}</td>
-        <td>{{ implode(', ', array_filter([$patient->address, $patient->city, $patient->county])) ?: '---' }}</td>
+        <td>{{ implode(', ', array_filter([$patient->address ?? '', $patient->city ?? '', $patient->county ?? ''])) ?: '___' }}</td>
     </tr>
     <tr>
-        <td class="label">{{ $t['anamnesis.patient_phone'] }}</td>
-        <td>{{ $patient->phone ?? '---' }}</td>
+        <td class="label">{{ $t['anamnesis.patient_phone'] }} / {{ $t['anamnesis.patient_email'] }}</td>
+        <td>{{ $patient->phone ?? '___' }} / {{ $patient->email ?? '___' }}</td>
     </tr>
     <tr>
-        <td class="label">{{ $t['anamnesis.patient_email'] }}</td>
-        <td>{{ $patient->email ?? '---' }}</td>
-    </tr>
-    <tr>
-        <td class="label">{{ $t['patient.date_of_birth'] }}</td>
-        <td>{{ $patient->date_of_birth ? \Carbon\Carbon::parse($patient->date_of_birth)->format('d/m/Y') : '---' }}</td>
-    </tr>
-    <tr>
-        <td class="label">{{ $t['patient.gender'] }}</td>
-        <td>
-            @if($patient->gender)
-                {{ $t['patient.' . $patient->gender] ?? $patient->gender }}
-            @else
-                ---
-            @endif
-        </td>
+        <td class="label">{{ $t['anamnesis.patient_first_visit_date'] }}</td>
+        <td>{{ $version->created_at->format('d/m/Y') }}</td>
     </tr>
 </table>
 
 {{-- Section 1: Special Situations --}}
-<h2>{{ $t['anamnesis.section_1'] }}</h2>
-@php $ss = $formData['special_situations'] ?? []; @endphp
-<div class="check-row">
-    <span class="check">{{ !empty($ss['pregnant']) ? '☑' : '☐' }}</span> {{ $t['anamnesis.pregnant'] }}
+<div class="section-title">1. {{ $t['anamnesis.section_1'] }}</div>
+<div class="inline-section">
+    {{ $chk($ss['pregnant'] ?? false) }} {{ $t['anamnesis.pregnant'] }}
+    {{ $chk(!($ss['pregnant'] ?? false)) }} {{ $no }}
     @if(!empty($ss['pregnant']) && !empty($ss['gestational_age']))
-        &mdash; {{ $t['anamnesis.gestational_age'] }}: <span class="field-value">{{ $ss['gestational_age'] }}</span>
+        &nbsp;&mdash; {{ $t['anamnesis.gestational_age'] }}: <span class="field-value">{{ $ss['gestational_age'] }}</span>
     @endif
-</div>
-<div class="check-row">
-    <span class="check">{{ !empty($ss['menstruating']) ? '☑' : '☐' }}</span> {{ $t['anamnesis.menstruating'] }}
+    &nbsp;&nbsp;|&nbsp;&nbsp;
+    {{ $chk($ss['menstruating'] ?? false) }} {{ $t['anamnesis.menstruating'] }}
+    {{ $chk(!($ss['menstruating'] ?? false)) }} {{ $no }}
 </div>
 
-{{-- Section 2: Allergies --}}
-<h2>{{ $t['anamnesis.section_2'] }}</h2>
-@php $al = $formData['allergies'] ?? []; @endphp
-<table class="patient-table">
-    <tr>
-        <td class="label">{{ $t['anamnesis.drug_allergies'] }}</td>
-        <td>
-            @if(!empty($al['drug_allergies']) && is_array($al['drug_allergies']))
-                {{ implode(', ', $al['drug_allergies']) }}
-            @else
-                ---
-            @endif
-        </td>
-    </tr>
-    <tr>
-        <td class="label">{{ $t['anamnesis.non_drug_allergies'] }}</td>
-        <td>
-            @if(!empty($al['non_drug_allergies']) && is_array($al['non_drug_allergies']))
-                {{ implode(', ', $al['non_drug_allergies']) }}
-            @else
-                ---
-            @endif
-        </td>
-    </tr>
-</table>
+{{-- Section 2: Allergies / Intolerances --}}
+<div class="section-title">2. {{ $t['anamnesis.section_2'] }}</div>
+<div class="inline-section">
+    <strong>{{ $t['anamnesis.drug_allergies'] }}:</strong>
+    <span class="field-value">{{ $joinOrDash($al['drug_allergies'] ?? []) }}</span>
+</div>
+<div class="inline-section">
+    <strong>{{ $t['anamnesis.non_drug_allergies'] }}:</strong>
+    <span class="field-value">{{ $joinOrDash($al['non_drug_allergies'] ?? []) }}</span>
+</div>
 
 {{-- Section 3: Current Treatment --}}
-<h2>{{ $t['anamnesis.section_3'] }}</h2>
-@php $ct = $formData['current_treatment'] ?? []; @endphp
-
-{{-- Medications table --}}
-<p style="font-weight: bold; font-size: 8.5pt; margin: 4px 0 2px 0;">{{ $t['anamnesis.medications'] }}</p>
-@if(!empty($ct['medications']) && is_array($ct['medications']) && count($ct['medications']) > 0)
-    <table class="meds-table">
-        <tr>
-            <th style="width: 60%">{{ $t['anamnesis.medication_name'] }}</th>
-            <th style="width: 40%">{{ $t['anamnesis.medication_dose'] }}</th>
-        </tr>
-        @foreach($ct['medications'] as $med)
-            <tr>
-                <td>{{ $med['name'] ?? '---' }}</td>
-                <td>{{ $med['dose'] ?? '---' }}</td>
-            </tr>
+<div class="section-title">3. {{ $t['anamnesis.section_3'] }}</div>
+<div class="inline-section">
+    <strong>{{ $t['anamnesis.medications'] }}:</strong>
+    @if(!empty($ct['medications']) && is_array($ct['medications']) && count($ct['medications']) > 0)
+        @foreach($ct['medications'] as $i => $med)
+            <span class="field-value">{{ $med['name'] ?? '?' }} ({{ $med['dose'] ?? '?' }})</span>@if($i < count($ct['medications']) - 1), @endif
         @endforeach
-    </table>
-@else
-    <p style="font-size: 8pt; color: #888;">---</p>
-@endif
-
-{{-- Antibiotics --}}
-<p style="font-weight: bold; font-size: 8.5pt; margin: 8px 0 2px 0;">{{ $t['anamnesis.antibiotics_last_2_weeks'] }}</p>
-@if(!empty($ct['antibiotics']) && is_array($ct['antibiotics']) && count($ct['antibiotics']) > 0)
-    <table class="meds-table">
-        <tr>
-            <th style="width: 60%">{{ $t['anamnesis.antibiotic_drug'] }}</th>
-            <th style="width: 40%">{{ $t['anamnesis.antibiotic_dose'] }}</th>
-        </tr>
-        @foreach($ct['antibiotics'] as $ab)
-            <tr>
-                <td>{{ $ab['name'] ?? $ab['drug'] ?? '---' }}</td>
-                <td>{{ $ab['dose'] ?? '---' }}</td>
-            </tr>
-        @endforeach
-    </table>
-@else
-    <p style="font-size: 8pt; color: #888;">---</p>
-@endif
-
-{{-- Anticoagulants, Bisphosphonates --}}
-<div style="margin-top: 6px;">
-    <span class="check">{{ !empty($ct['anticoagulants']) ? '☑' : '☐' }}</span> {{ $t['anamnesis.anticoagulants'] }}
-    @if(!empty($ct['anticoagulants']) && !empty($ct['anticoagulant_inr']))
-        &mdash; {{ $t['anamnesis.anticoagulant_inr'] }}: <span class="field-value">{{ $ct['anticoagulant_inr'] }}</span>
+    @else
+        ___
     @endif
 </div>
-<div style="margin-top: 3px;">
-    <span class="check">{{ !empty($ct['bisphosphonates']) ? '☑' : '☐' }}</span> {{ $t['anamnesis.bisphosphonates'] }}
-    @if(!empty($ct['bisphosphonates']))
-        @if(!empty($ct['bisphosphonate_route']))
-            &mdash; {{ $t['anamnesis.bisphosphonate_route'] }}:
-            <span class="field-value">
-                @if($ct['bisphosphonate_route'] === 'oral')
-                    {{ $t['anamnesis.bisphosphonate_oral'] }}
-                @elseif($ct['bisphosphonate_route'] === 'iv')
-                    {{ $t['anamnesis.bisphosphonate_iv'] }}
-                @else
-                    {{ $ct['bisphosphonate_route'] }}
-                @endif
-            </span>
+
+<div class="inline-section">
+    <strong>{{ $t['anamnesis.antibiotics_last_2_weeks'] }}:</strong>
+    {{ $chk(!empty($ct['antibiotics']) && is_array($ct['antibiotics']) && count($ct['antibiotics']) > 0) }}
+    {{ $yes }}
+    {{ $chk(empty($ct['antibiotics']) || !is_array($ct['antibiotics']) || count($ct['antibiotics']) === 0) }}
+    {{ $no }}
+    @if(!empty($ct['antibiotics']) && is_array($ct['antibiotics']))
+        &nbsp;&mdash;
+        @foreach($ct['antibiotics'] as $i => $ab)
+            <span class="field-value">{{ $ab['name'] ?? $ab['drug'] ?? '?' }} ({{ $ab['dose'] ?? '?' }})</span>@if($i < count($ct['antibiotics']) - 1), @endif
+        @endforeach
+    @endif
+</div>
+
+<div class="inline-section">
+    <strong>{{ $t['anamnesis.anticoagulants'] }}:</strong>
+    {{ $chk($ct['anticoagulants'] ?? false) }}
+    {{ $yes }}
+    {{ $chk(!($ct['anticoagulants'] ?? false)) }}
+    {{ $no }}
+    @if(!empty($ct['anticoagulants']))
+        @if(!empty($ct['anticoagulant_drug']))
+            &nbsp;&mdash; {{ $t['anamnesis.drug_and_dose'] }}: <span class="field-value">{{ $ct['anticoagulant_drug'] }}</span>
         @endif
+        @if(!empty($ct['anticoagulant_inr']))
+            &nbsp; INR: <span class="field-value">{{ $ct['anticoagulant_inr'] }}</span>
+        @endif
+    @endif
+</div>
+
+<div class="inline-section">
+    <strong>{{ $t['anamnesis.bisphosphonates'] }}:</strong>
+    {{ $chk($ct['bisphosphonates'] ?? false) }}
+    {{ $yes }}
+    {{ $chk(!($ct['bisphosphonates'] ?? false)) }}
+    {{ $no }}
+    @if(!empty($ct['bisphosphonates']))
+        &nbsp;&mdash;
+        {{ $t['anamnesis.route_label'] }}:
+        {{ $chk(($ct['bisphosphonate_route'] ?? '') === 'iv') }} i.v.
+        {{ $chk(($ct['bisphosphonate_route'] ?? '') === 'oral') }} {{ $t['anamnesis.bisphosphonate_oral'] }}
         @if(!empty($ct['bisphosphonate_duration']))
-            &mdash; {{ $t['anamnesis.bisphosphonate_duration'] }}: <span class="field-value">{{ $ct['bisphosphonate_duration'] }}</span>
+            &nbsp; {{ $t['anamnesis.bisphosphonate_duration'] }}: <span class="field-value">{{ $ct['bisphosphonate_duration'] }}</span>
         @endif
         @if(!empty($ct['bisphosphonate_beta_ctx']))
-            &mdash; {{ $t['anamnesis.bisphosphonate_beta_ctx'] }}: <span class="field-value">{{ $ct['bisphosphonate_beta_ctx'] }}</span>
+            &nbsp; β-CTX: <span class="field-value">{{ $ct['bisphosphonate_beta_ctx'] }}</span>
         @endif
     @endif
 </div>
 
+{{-- Section 4: Diseases / Medical History --}}
+<div class="section-title">4. {{ $t['anamnesis.section_4'] }}</div>
 
-{{-- ========== PAGE 2: Diseases ========== --}}
-<div class="page-break"></div>
-<div class="clinic-name" style="font-size: 9pt;">{{ $t['anamnesis.clinic_name'] }}</div>
-<h2>{{ $t['anamnesis.section_4'] }}</h2>
+<div class="inline-section">
+    <strong>{{ $t['anamnesis.congenital_diseases'] }}:</strong>
+    <span class="field-value">{{ !empty($diseases['congenital_diseases']) ? $diseases['congenital_diseases'] : '___' }}</span>
+    &nbsp;&nbsp;
+    <strong>{{ $t['anamnesis.occupational_diseases'] }}:</strong>
+    <span class="field-value">{{ !empty($diseases['occupational_diseases']) ? $diseases['occupational_diseases'] : '___' }}</span>
+</div>
 
 @php
-    $diseases = $formData['diseases'] ?? [];
-
     $categories = [
         'heart' => [
             'angina_pectoris', 'myocardial_infarction', 'arrhythmias', 'blocks',
@@ -331,194 +323,174 @@
     ];
 @endphp
 
-<table class="diseases-table">
-    @foreach($categories as $catKey => $fields)
-        <tr>
-            <td class="cat-header" colspan="2">{{ $t['anamnesis.diseases_' . $catKey] }}</td>
-        </tr>
-        @php $catData = $diseases[$catKey] ?? []; @endphp
-        @foreach(array_chunk($fields, 2) as $pair)
-            <tr>
-                @foreach($pair as $field)
-                    <td style="width: 50%;">
-                        <span class="check">{{ !empty($catData[$field]) ? '☑' : '☐' }}</span>
-                        {{ $t['anamnesis.' . $catKey . '_' . $field] }}
-                        @if($field === 'failure' && !empty($catData['failure']) && !empty($catData['failure_nyha']))
-                            (NYHA: {{ $catData['failure_nyha'] }})
-                        @endif
-                        @if($field === 'hypertension' && !empty($catData['hypertension']) && !empty($catData['hypertension_max']))
-                            (Max: {{ $catData['hypertension_max'] }})
-                        @endif
-                    </td>
-                @endforeach
-                @if(count($pair) === 1)
-                    <td style="width: 50%;"></td>
-                @endif
-            </tr>
+@foreach($categories as $catKey => $fields)
+    @php $catData = $diseases[$catKey] ?? []; @endphp
+    <div class="disease-line">
+        <span class="disease-label">{{ $t['anamnesis.diseases_' . $catKey] }}:</span>
+        @foreach($fields as $i => $field)
+            {{ $chk($catData[$field] ?? false) }} {{ $t['anamnesis.' . $catKey . '_' . $field] }}
+            @if($field === 'myocardial_infarction' && !empty($catData['myocardial_infarction']))
+                ({{ $t['anamnesis.when_label'] }}: <span class="field-value">{{ $catData['myocardial_infarction_when'] ?? '___' }}</span>)
+            @endif
+            @if($field === 'failure' && !empty($catData['failure']) && !empty($catData['failure_nyha']))
+                (NYHA: <span class="field-value">{{ $catData['failure_nyha'] }}</span>)
+            @endif
+            @if($field === 'hypertension' && !empty($catData['hypertension']) && !empty($catData['hypertension_max']))
+                (Max: <span class="field-value">{{ $catData['hypertension_max'] }}</span>)
+            @endif
+            @if($i < count($fields) - 1) &nbsp; @endif
         @endforeach
-    @endforeach
-</table>
+    </div>
+@endforeach
 
 {{-- Neoplasms --}}
-<div style="margin-top: 8px;">
-    <span class="check">{{ !empty($diseases['neoplasms']) ? '☑' : '☐' }}</span>
-    <strong>{{ $t['anamnesis.diseases_neoplasms'] }}</strong>
+<div class="disease-line">
+    <span class="disease-label">{{ $t['anamnesis.diseases_neoplasms'] }}:</span>
+    {{ $chk($diseases['neoplasms'] ?? false) }}
+    {{ $yes }}
+    {{ $chk(!($diseases['neoplasms'] ?? false)) }}
+    {{ $no }}
     @if(!empty($diseases['neoplasms']) && !empty($diseases['neoplasms_details']))
         &mdash; <span class="field-value">{{ $diseases['neoplasms_details'] }}</span>
     @endif
 </div>
 
 {{-- Other diseases --}}
-<div style="margin-top: 4px;">
-    <span class="check">{{ !empty($diseases['other_diseases']) ? '☑' : '☐' }}</span>
-    <strong>{{ $t['anamnesis.diseases_other'] }}</strong>
+<div class="disease-line">
+    <span class="disease-label">{{ $t['anamnesis.diseases_other'] }}:</span>
+    {{ $chk($diseases['other_diseases'] ?? false) }}
+    {{ $yes }}
+    {{ $chk(!($diseases['other_diseases'] ?? false)) }}
+    {{ $no }}
     @if(!empty($diseases['other_diseases']) && !empty($diseases['other_diseases_details']))
         &mdash; <span class="field-value">{{ $diseases['other_diseases_details'] }}</span>
     @endif
 </div>
 
 
-{{-- ========== PAGE 3: Surgical/Dental History, Habits, Consent ========== --}}
+{{-- ========== PAGE 2: Surgical/Dental, Habits, Consent ========== --}}
 <div class="page-break"></div>
-<div class="clinic-name" style="font-size: 9pt;">{{ $t['anamnesis.clinic_name'] }}</div>
+<div class="page-header">{{ $t['anamnesis.clinic_name'] }} &mdash; {{ $t['anamnesis.title'] }}</div>
 
-{{-- Section 5: Surgical History --}}
-<h2>{{ $t['anamnesis.section_5'] }}</h2>
-@php $sh = $formData['surgical_history'] ?? []; @endphp
-<table class="patient-table">
-    <tr>
-        <td class="label">{{ $t['anamnesis.previous_surgeries'] }}</td>
-        <td>{{ !empty($sh['previous_surgeries']) ? $sh['previous_surgeries'] : '---' }}</td>
-    </tr>
-    <tr>
-        <td class="label">{{ $t['anamnesis.transfusions'] }}</td>
-        <td>
-            <span class="check">{{ !empty($sh['transfusions']) ? '☑' : '☐' }}</span>
-            {{ !empty($sh['transfusions']) ? ($t['app.yes'] ?? 'Yes') : ($t['app.no'] ?? 'No') }}
-        </td>
-    </tr>
-    <tr>
-        <td class="label">{{ $t['anamnesis.surgery_complications'] }}</td>
-        <td>{{ !empty($sh['complications']) ? $sh['complications'] : '---' }}</td>
-    </tr>
-</table>
+{{-- Section 5: Surgical History / Transfusions --}}
+<div class="section-title">5. {{ $t['anamnesis.section_5'] }}</div>
+<div class="inline-section">
+    <strong>{{ $t['anamnesis.previous_surgeries'] }}:</strong>
+    <span class="field-value">{{ !empty($sh['previous_surgeries']) ? $sh['previous_surgeries'] : '___' }}</span>
+</div>
+<div class="inline-section">
+    <strong>{{ $t['anamnesis.transfusions'] }}:</strong>
+    {{ $chk($sh['transfusions'] ?? false) }}
+    {{ $yes }}
+    {{ $chk(!($sh['transfusions'] ?? false)) }}
+    {{ $no }}
+</div>
+<div class="inline-section">
+    <strong>{{ $t['anamnesis.surgery_complications'] }}:</strong>
+    <span class="field-value">{{ !empty($sh['complications']) ? $sh['complications'] : '___' }}</span>
+</div>
 
 {{-- Section 6: Dental History --}}
-<h2>{{ $t['anamnesis.section_6'] }}</h2>
-@php $dh = $formData['dental_history'] ?? []; @endphp
+<div class="section-title">6. {{ $t['anamnesis.section_6'] }}</div>
+@php $anesthData = $dh['anesthesia_types'] ?? []; @endphp
+<div class="inline-section">
+    <strong>{{ $t['anamnesis.dental_anesthesia_types'] }}:</strong>
+    {{ $chk($anesthData['local'] ?? false) }} {{ $t['anamnesis.anesthesia_local'] }}
+    &nbsp;
+    {{ $chk($anesthData['plexal'] ?? false) }} {{ $t['anamnesis.anesthesia_plexal'] }}
+    &nbsp;
+    {{ $chk($anesthData['troncular'] ?? false) }} {{ $t['anamnesis.anesthesia_troncular'] }}
+    &nbsp;
+    {{ $chk($anesthData['general'] ?? false) }} {{ $t['anamnesis.anesthesia_general'] }}
+</div>
+<div class="inline-section">
+    <strong>{{ $t['anamnesis.adverse_reactions'] }}:</strong>
+    <span class="field-value">{{ !empty($dh['adverse_reactions']) ? $dh['adverse_reactions'] : '___' }}</span>
+</div>
 
-<p style="font-weight: bold; font-size: 8.5pt; margin: 4px 0 2px 0;">{{ $t['anamnesis.dental_anesthesia_types'] }}</p>
-@php
-    $anesthesiaTypes = [
-        'local' => $t['anamnesis.anesthesia_local'],
-        'plexal' => $t['anamnesis.anesthesia_plexal'],
-        'troncular' => $t['anamnesis.anesthesia_troncular'],
-        'general' => $t['anamnesis.anesthesia_general'],
-    ];
-    $anesthesiaData = $dh['anesthesia_types'] ?? [];
-@endphp
-@foreach($anesthesiaTypes as $key => $label)
-    <div class="check-row">
-        <span class="check">{{ !empty($anesthesiaData[$key]) ? '☑' : '☐' }}</span> {{ $label }}
-    </div>
-@endforeach
+{{-- Section 7: Habits / Substance Use --}}
+<div class="section-title">7. {{ $t['anamnesis.section_7'] }}</div>
+<div class="inline-section">
+    <strong>{{ $t['anamnesis.tobacco'] }}:</strong>
+    {{ $chk($hab['tobacco'] ?? false) }}
+    {{ $yes }}
+    {{ $chk(!($hab['tobacco'] ?? false)) }}
+    {{ $no }}
+    @if(!empty($hab['tobacco']))
+        &nbsp;&mdash; {{ $t['anamnesis.tobacco_amount'] }}: <span class="field-value">{{ $hab['tobacco_amount'] ?? '___' }}</span>
+        &nbsp; {{ $t['anamnesis.tobacco_duration'] }}: <span class="field-value">{{ $hab['tobacco_duration'] ?? '___' }}</span>
+    @endif
+</div>
+<div class="inline-section">
+    <strong>{{ $t['anamnesis.alcohol'] }}:</strong>
+    {{ $chk($hab['alcohol'] ?? false) }}
+    {{ $yes }}
+    {{ $chk(!($hab['alcohol'] ?? false)) }}
+    {{ $no }}
+    @if(!empty($hab['alcohol']))
+        &nbsp;&mdash; {{ $t['anamnesis.alcohol_amount'] }}: <span class="field-value">{{ $hab['alcohol_amount'] ?? '___' }}</span>
+        &nbsp; {{ $t['anamnesis.alcohol_duration'] }}: <span class="field-value">{{ $hab['alcohol_duration'] ?? '___' }}</span>
+    @endif
+</div>
+<div class="inline-section">
+    <strong>{{ $t['anamnesis.drugs'] }}:</strong>
+    {{ $chk($hab['drugs'] ?? false) }}
+    {{ $yes }}
+    {{ $chk(!($hab['drugs'] ?? false)) }}
+    {{ $no }}
+    @if(!empty($hab['drugs']))
+        &nbsp;&mdash; {{ $t['anamnesis.drugs_amount'] }}: <span class="field-value">{{ $hab['drugs_amount'] ?? '___' }}</span>
+        &nbsp; {{ $t['anamnesis.drugs_duration'] }}: <span class="field-value">{{ $hab['drugs_duration'] ?? '___' }}</span>
+    @endif
+</div>
 
-<table class="patient-table" style="margin-top: 6px;">
-    <tr>
-        <td class="label">{{ $t['anamnesis.adverse_reactions'] }}</td>
-        <td>{{ !empty($dh['adverse_reactions']) ? $dh['adverse_reactions'] : '---' }}</td>
-    </tr>
-</table>
-
-{{-- Section 7: Habits --}}
-<h2>{{ $t['anamnesis.section_7'] }}</h2>
-@php $hab = $formData['habits'] ?? []; @endphp
-<table class="patient-table">
-    <tr>
-        <td class="label" style="width: 25%;">{{ $t['anamnesis.tobacco'] }}</td>
-        <td style="width: 8%; text-align: center;">
-            <span class="check">{{ !empty($hab['tobacco']) ? '☑' : '☐' }}</span>
-        </td>
-        <td style="width: 33%;">
-            @if(!empty($hab['tobacco']))
-                {{ $t['anamnesis.tobacco_amount'] }}: <span class="field-value">{{ $hab['tobacco_amount'] ?? '---' }}</span>
-            @endif
-        </td>
-        <td style="width: 34%;">
-            @if(!empty($hab['tobacco']))
-                {{ $t['anamnesis.tobacco_duration'] }}: <span class="field-value">{{ $hab['tobacco_duration'] ?? '---' }}</span>
-            @endif
-        </td>
-    </tr>
-    <tr>
-        <td class="label">{{ $t['anamnesis.alcohol'] }}</td>
-        <td style="text-align: center;">
-            <span class="check">{{ !empty($hab['alcohol']) ? '☑' : '☐' }}</span>
-        </td>
-        <td>
-            @if(!empty($hab['alcohol']))
-                {{ $t['anamnesis.alcohol_amount'] }}: <span class="field-value">{{ $hab['alcohol_amount'] ?? '---' }}</span>
-            @endif
-        </td>
-        <td>
-            @if(!empty($hab['alcohol']))
-                {{ $t['anamnesis.alcohol_duration'] }}: <span class="field-value">{{ $hab['alcohol_duration'] ?? '---' }}</span>
-            @endif
-        </td>
-    </tr>
-    <tr>
-        <td class="label">{{ $t['anamnesis.drugs'] }}</td>
-        <td style="text-align: center;">
-            <span class="check">{{ !empty($hab['drugs']) ? '☑' : '☐' }}</span>
-        </td>
-        <td>
-            @if(!empty($hab['drugs']))
-                {{ $t['anamnesis.drugs_amount'] }}: <span class="field-value">{{ $hab['drugs_amount'] ?? '---' }}</span>
-            @endif
-        </td>
-        <td>
-            @if(!empty($hab['drugs']))
-                {{ $t['anamnesis.drugs_duration'] }}: <span class="field-value">{{ $hab['drugs_duration'] ?? '---' }}</span>
-            @endif
-        </td>
-    </tr>
-</table>
-
-{{-- GDPR Consent --}}
+{{-- GDPR & Informed Consent --}}
 <div class="consent-box">
     <div class="consent-title">{{ $t['anamnesis.consent_title'] }}</div>
     <p>{{ $t['anamnesis.consent_text'] }}</p>
     <div style="margin-top: 6px;">
-        <span class="check">{{ $version->consent_given ? '☑' : '☐' }}</span>
+        {{ $chk($version->consent_given) }}
         {{ $t['anamnesis.consent_agree'] }}
     </div>
 </div>
 
-{{-- Signature area --}}
-<table class="signature-area">
+{{-- Signature Table --}}
+<table class="signature-table">
+    <tr>
+        <td class="sig-header">{{ $t['anamnesis.dentist_label'] }}</td>
+        <td class="sig-header">{{ $t['anamnesis.patient_label'] }}</td>
+    </tr>
     <tr>
         <td>
-            <strong>{{ $t['anamnesis.consent_date'] }}:</strong>
-            {{ $version->consent_given_at ? $version->consent_given_at->format('d/m/Y') : $version->created_at->format('d/m/Y') }}
+            <div>{{ $t['anamnesis.signature_label'] }}:</div>
+            <div class="sig-line"></div>
         </td>
-        <td style="text-align: right;">
-            <strong>{{ $t['anamnesis.consent_signature'] }}:</strong>
-            <div class="signature-line"></div>
+        <td>
+            <div>{{ $t['anamnesis.consent_signature'] }}:</div>
+            <div class="sig-line"></div>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <div>{{ $t['anamnesis.name_label'] }}: <span class="field-blank"></span></div>
+        </td>
+        <td>
+            <div>{{ $t['anamnesis.name_label'] }}: {{ $patient->last_name }}, {{ $patient->first_name }}</div>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <div>{{ $t['anamnesis.consent_date'] }}: <span class="field-blank"></span></div>
+        </td>
+        <td>
+            <div>{{ $t['anamnesis.consent_date'] }}: {{ $version->consent_given_at ? $version->consent_given_at->format('d/m/Y H:i') : $version->created_at->format('d/m/Y H:i') }}</div>
         </td>
     </tr>
 </table>
 
 {{-- Footer --}}
 <div class="footer-note">
-    {{ $t['anamnesis.clinic_name'] }} &mdash; {{ $t['anamnesis.title'] }}
-    &mdash; {{ $t['anamnesis.version'] }} {{ $version->version }}
-    &mdash; {{ $patient->identifier }}
-    <br>
-    @if($lang === 'ro')
-        Document confidențial. Datele medicale sunt protejate conform GDPR (Regulamentul UE 2016/679).
-    @else
-        Confidential document. Medical data is protected under GDPR (EU Regulation 2016/679).
-    @endif
+    {{ $t['anamnesis.pdf_footer'] }}
 </div>
 
 </body>
