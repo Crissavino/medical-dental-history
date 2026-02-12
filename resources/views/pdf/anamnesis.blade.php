@@ -4,50 +4,50 @@
     <meta charset="UTF-8">
     <style>
         @page {
-            margin: 18mm 15mm 18mm 15mm;
+            margin: 12mm 12mm 10mm 12mm;
         }
         body {
             font-family: 'DejaVu Sans', sans-serif;
-            font-size: 9pt;
+            font-size: 8.5pt;
             color: #1a1a1a;
-            line-height: 1.45;
+            line-height: 1.3;
         }
         .logo-area {
             text-align: center;
-            margin-bottom: 8px;
+            margin-bottom: 4px;
         }
         .logo-area img {
-            height: 50px;
+            height: 42px;
         }
         h1 {
-            font-size: 14pt;
+            font-size: 12pt;
             text-align: center;
-            margin: 6px 0 2px 0;
+            margin: 3px 0 1px 0;
             font-weight: bold;
         }
         .subtitle {
             text-align: center;
-            font-size: 8pt;
+            font-size: 7pt;
             font-style: italic;
             color: #555;
-            margin-bottom: 12px;
+            margin-bottom: 6px;
         }
         .section-title {
-            font-size: 10pt;
+            font-size: 9pt;
             font-weight: bold;
-            margin: 12px 0 5px 0;
-            padding: 3px 0;
+            margin: 6px 0 2px 0;
+            padding: 2px 0;
             border-bottom: 1px solid #333;
         }
         .patient-table {
             width: 100%;
             border-collapse: collapse;
-            margin-bottom: 10px;
+            margin-bottom: 4px;
         }
         .patient-table td {
-            padding: 4px 6px;
+            padding: 2px 5px;
             border: 1px solid #999;
-            font-size: 9pt;
+            font-size: 8.5pt;
         }
         .patient-table .label {
             background-color: #f0f0f0;
@@ -55,9 +55,9 @@
             width: 30%;
         }
         .inline-section {
-            margin: 3px 0;
-            font-size: 9pt;
-            line-height: 1.6;
+            margin: 1px 0;
+            font-size: 8.5pt;
+            line-height: 1.4;
         }
         .field-value {
             color: #0055aa;
@@ -69,42 +69,42 @@
             border-bottom: 1px solid #999;
         }
         .disease-line {
-            margin: 2px 0;
-            font-size: 8.5pt;
-            line-height: 1.5;
+            margin: 1px 0;
+            font-size: 8pt;
+            line-height: 1.35;
         }
         .disease-label {
             font-weight: bold;
-            font-size: 9pt;
+            font-size: 8.5pt;
         }
         .consent-box {
             border: 1px solid #666;
-            padding: 10px 12px;
-            margin: 12px 0;
-            font-size: 8pt;
-            line-height: 1.6;
+            padding: 6px 8px;
+            margin: 6px 0;
+            font-size: 7.5pt;
+            line-height: 1.4;
         }
         .consent-box .consent-title {
             font-weight: bold;
-            font-size: 9pt;
-            margin-bottom: 6px;
+            font-size: 8.5pt;
+            margin-bottom: 3px;
         }
         .consent-box ul {
-            margin: 4px 0 4px 16px;
+            margin: 2px 0 2px 16px;
             padding: 0;
         }
         .consent-box li {
-            margin-bottom: 2px;
+            margin-bottom: 1px;
         }
         .signature-table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 16px;
+            margin-top: 8px;
         }
         .signature-table td {
             border: 1px solid #999;
-            padding: 6px 10px;
-            font-size: 9pt;
+            padding: 3px 6px;
+            font-size: 8.5pt;
             width: 50%;
             vertical-align: top;
         }
@@ -115,16 +115,16 @@
         }
         .sig-line {
             border-bottom: 1px solid #333;
-            height: 28px;
-            margin-top: 4px;
+            height: 22px;
+            margin-top: 2px;
         }
         .footer-note {
-            font-size: 7pt;
+            font-size: 6.5pt;
             color: #666;
             text-align: center;
-            margin-top: 14px;
+            margin-top: 6px;
             border-top: 1px solid #ccc;
-            padding-top: 5px;
+            padding-top: 3px;
             font-style: italic;
         }
         .page-break {
@@ -132,9 +132,9 @@
         }
         .page-header {
             text-align: center;
-            font-size: 8pt;
+            font-size: 7pt;
             color: #888;
-            margin-bottom: 8px;
+            margin-bottom: 4px;
         }
     </style>
 </head>
@@ -462,7 +462,7 @@
         <td>
             <div>{{ $t['anamnesis.signature_label'] }}:</div>
             @if(!empty($version->dentist_signature_data))
-                <div style="margin-top: 4px;"><img src="{{ $version->dentist_signature_data }}" style="max-height: 50px; max-width: 100%;" /></div>
+                <div style="margin-top: 4px;"><img src="{{ $version->dentist_signature_data }}" style="max-height: 40px; max-width: 100%;" /></div>
             @else
                 <div class="sig-line"></div>
             @endif
@@ -470,7 +470,7 @@
         <td>
             <div>{{ $t['anamnesis.consent_signature'] }}:</div>
             @if(!empty($version->signature_data))
-                <div style="margin-top: 4px;"><img src="{{ $version->signature_data }}" style="max-height: 50px; max-width: 100%;" /></div>
+                <div style="margin-top: 4px;"><img src="{{ $version->signature_data }}" style="max-height: 40px; max-width: 100%;" /></div>
             @else
                 <div class="sig-line"></div>
             @endif
