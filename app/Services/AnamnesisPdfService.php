@@ -48,10 +48,10 @@ class AnamnesisPdfService
 
     private function loadLogoBase64(): string
     {
-        $svgPath = public_path('images/clinic-logo.svg');
+        $pngPath = public_path('images/clinic-logo.png');
 
-        if (file_exists($svgPath)) {
-            return base64_encode(file_get_contents($svgPath));
+        if (file_exists($pngPath)) {
+            return base64_encode(file_get_contents($pngPath));
         }
 
         return '';

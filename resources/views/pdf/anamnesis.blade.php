@@ -168,7 +168,7 @@
 
 {{-- Logo --}}
 <div class="logo-area">
-    <img src="data:image/svg+xml;base64,{{ $logoBase64 }}" alt="Dental Wellness">
+    <img src="data:image/png;base64,{{ $logoBase64 }}" alt="Dental Wellness">
 </div>
 
 {{-- Title --}}
@@ -368,9 +368,7 @@
 </div>
 
 
-{{-- ========== PAGE 2: Surgical/Dental, Habits, Consent ========== --}}
-<div class="page-break"></div>
-<div class="page-header">{{ $t['anamnesis.clinic_name'] }} &mdash; {{ $t['anamnesis.title'] }}</div>
+{{-- ========== Surgical/Dental, Habits, Consent ========== --}}
 
 {{-- Section 5: Surgical History / Transfusions --}}
 <div class="section-title">5. {{ $t['anamnesis.section_5'] }}</div>
