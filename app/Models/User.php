@@ -17,11 +17,17 @@ class User extends Authenticatable
         'email',
         'password',
         'role',
+        'signature_data',
     ];
 
     protected $hidden = [
         'password',
         'remember_token',
+        'signature_data',
+    ];
+
+    protected $appends = [
+        'has_signature',
     ];
 
     protected function casts(): array
@@ -40,6 +46,11 @@ class User extends Authenticatable
     public function auditLogs(): HasMany
     {
         return $this->hasMany(AuditLog::class);
+    }
+
+    public function getHasSignatureAttribute(): bool
+    {
+        return !empty($this->signature_data);
     }
 
     public function isAdmin(): bool

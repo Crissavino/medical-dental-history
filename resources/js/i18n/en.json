@@ -321,7 +321,13 @@
     "signature_clear": "Clear",
     "signature_type_name": "Type your name",
     "signature_draw": "Draw signature",
-    "signature_placeholder": "Full name"
+    "signature_placeholder": "Full name",
+    "sign": "Sign",
+    "signed_by": "Signed by {name}",
+    "signed_at": "on {date}",
+    "save_signature": "Save signature & sign",
+    "already_signed": "Signed",
+    "capture_signature_title": "Draw your signature"
   },
   "audit": {
     "title": "Audit Logs",

@@ -73,6 +73,7 @@ class PatientController extends Controller
         return Inertia::render('Patients/Show', [
             'patient' => $patient,
             'anamnesisVersions' => $patient->anamnesisVersions()
+                ->with('signer:id,name')
                 ->orderByDesc('version')
                 ->get(),
         ]);

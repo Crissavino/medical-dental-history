@@ -10,7 +10,7 @@ class AnamnesisPdfService
 {
     public function generate(AnamnesisVersion $anamnesisVersion, ?string $langOverride = null): \Barryvdh\DomPDF\PDF
     {
-        $anamnesisVersion->load('patient');
+        $anamnesisVersion->load('patient', 'signer');
 
         $lang = $langOverride ?? $anamnesisVersion->language ?? 'en';
         $translations = $this->loadTranslations($lang);

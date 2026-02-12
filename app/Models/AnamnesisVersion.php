@@ -20,6 +20,9 @@ class AnamnesisVersion extends Model
         'language',
         'recorded_by',
         'signature_data',
+        'dentist_signature_data',
+        'signed_by',
+        'signed_at',
     ];
 
     protected function casts(): array
@@ -28,6 +31,7 @@ class AnamnesisVersion extends Model
             'form_data' => 'array',
             'consent_given' => 'boolean',
             'consent_given_at' => 'datetime',
+            'signed_at' => 'datetime',
         ];
     }
 
@@ -39,6 +43,11 @@ class AnamnesisVersion extends Model
     public function recorder(): BelongsTo
     {
         return $this->belongsTo(User::class, 'recorded_by');
+    }
+
+    public function signer(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'signed_by');
     }
 
     protected static function booted(): void

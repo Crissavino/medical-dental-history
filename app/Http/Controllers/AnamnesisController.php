@@ -7,6 +7,7 @@ use App\Models\AnamnesisVersion;
 use App\Models\Patient;
 use App\Services\AnamnesisPdfService;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
 use Symfony\Component\HttpFoundation\Response as HttpResponse;
@@ -47,15 +48,39 @@ class AnamnesisController extends Controller
         return $pdf->download($filename);
     }
 
+    public function sign(Request $request, AnamnesisVersion $anamnesisVersion): RedirectResponse
+    {
+        $user = $request->user();
+
+        abort_unless($user->hasRole('dentist', 'admin'), 403);
+
+        if (!$user->signature_data) {
+            $request->validate([
+                'signature_data' => ['required', 'string'],
+            ]);
+
+            $user->update(['signature_data' => $request->input('signature_data')]);
+        }
+
+        $anamnesisVersion->update([
+            'dentist_signature_data' => $user->signature_data,
+            'signed_by' => $user->id,
+            'signed_at' => now(),
+        ]);
+
+        return redirect()->back()->with('success', 'Anamnesis signed successfully.');
+    }
+
     public function show(AnamnesisVersion $anamnesisVersion): Response
     {
-        $anamnesisVersion->load('patient', 'recorder');
+        $anamnesisVersion->load('patient', 'recorder', 'signer:id,name');
 
         return Inertia::render('Patients/Show', [
             'patient' => $anamnesisVersion->patient,
             'selectedAnamnesis' => $anamnesisVersion,
             'anamnesisVersions' => $anamnesisVersion->patient
                 ->anamnesisVersions()
+                ->with('signer:id,name')
                 ->orderByDesc('version')
                 ->get(),
         ]);

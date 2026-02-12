@@ -65,6 +65,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/anamnesis/{anamnesisVersion}/pdf/{lang?}', [AnamnesisController::class, 'pdf'])
         ->where('lang', 'en|ro|es')
         ->name('anamnesis.pdf');
+    Route::post('/anamnesis/{anamnesisVersion}/sign', [AnamnesisController::class, 'sign'])
+        ->name('anamnesis.sign');
 
     // Encounters (nested under patient for create, standalone for show/edit)
     Route::get('/patients/{patient}/encounters', [EncounterController::class, 'index'])

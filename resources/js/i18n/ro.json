@@ -321,7 +321,13 @@
     "signature_clear": "Șterge",
     "signature_type_name": "Tastați numele",
     "signature_draw": "Desenați semnătura",
-    "signature_placeholder": "Numele complet"
+    "signature_placeholder": "Numele complet",
+    "sign": "Semnează",
+    "signed_by": "Semnat de {name}",
+    "signed_at": "la {date}",
+    "save_signature": "Salvează semnătura și semnează",
+    "already_signed": "Semnat",
+    "capture_signature_title": "Desenați semnătura"
   },
   "audit": {
     "title": "Jurnal de audit",

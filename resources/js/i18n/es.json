@@ -321,7 +321,13 @@
     "signature_clear": "Limpiar",
     "signature_type_name": "Escribir nombre",
     "signature_draw": "Dibujar firma",
-    "signature_placeholder": "Nombre completo"
+    "signature_placeholder": "Nombre completo",
+    "sign": "Firmar",
+    "signed_by": "Firmado por {name}",
+    "signed_at": "el {date}",
+    "save_signature": "Guardar firma y firmar",
+    "already_signed": "Firmado",
+    "capture_signature_title": "Dibuje su firma"
   },
   "audit": {
     "title": "Registro de auditoría",

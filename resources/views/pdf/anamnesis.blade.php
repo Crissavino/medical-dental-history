@@ -461,7 +461,11 @@
     <tr>
         <td>
             <div>{{ $t['anamnesis.signature_label'] }}:</div>
-            <div class="sig-line"></div>
+            @if(!empty($version->dentist_signature_data))
+                <div style="margin-top: 4px;"><img src="{{ $version->dentist_signature_data }}" style="max-height: 50px; max-width: 100%;" /></div>
+            @else
+                <div class="sig-line"></div>
+            @endif
         </td>
         <td>
             <div>{{ $t['anamnesis.consent_signature'] }}:</div>
@@ -474,7 +478,11 @@
     </tr>
     <tr>
         <td>
-            <div>{{ $t['anamnesis.name_label'] }}: <span class="field-blank"></span></div>
+            @if($version->signer)
+                <div>{{ $t['anamnesis.name_label'] }}: {{ $version->signer->name }}</div>
+            @else
+                <div>{{ $t['anamnesis.name_label'] }}: <span class="field-blank"></span></div>
+            @endif
         </td>
         <td>
             <div>{{ $t['anamnesis.name_label'] }}: {{ $patient->last_name }}, {{ $patient->first_name }}</div>
@@ -482,7 +490,11 @@
     </tr>
     <tr>
         <td>
-            <div>{{ $t['anamnesis.consent_date'] }}: <span class="field-blank"></span></div>
+            @if($version->signed_at)
+                <div>{{ $t['anamnesis.consent_date'] }}: {{ $version->signed_at->format('d/m/Y H:i') }}</div>
+            @else
+                <div>{{ $t['anamnesis.consent_date'] }}: <span class="field-blank"></span></div>
+            @endif
         </td>
         <td>
             <div>{{ $t['anamnesis.consent_date'] }}: {{ $version->consent_given_at ? $version->consent_given_at->format('d/m/Y H:i') : $version->created_at->format('d/m/Y H:i') }}</div>

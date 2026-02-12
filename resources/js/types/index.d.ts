@@ -4,6 +4,7 @@ export interface User {
     email: string;
     role: 'admin' | 'dentist' | 'assistant' | 'receptionist';
     email_verified_at?: string;
+    has_signature: boolean;
     created_at: string;
     updated_at: string;
 }
@@ -42,6 +43,10 @@ export interface AnamnesisVersion {
     language: 'en' | 'ro' | 'es';
     recorded_by?: number;
     recorder?: User;
+    dentist_signature_data?: string | null;
+    signed_by?: number | null;
+    signed_at?: string | null;
+    signer?: User;
     created_at: string;
     updated_at: string;
 }
