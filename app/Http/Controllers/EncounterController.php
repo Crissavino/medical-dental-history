@@ -8,10 +8,12 @@ use App\Http\Requests\UpdateEncounterRequest;
 use App\Models\AuditLog;
 use App\Models\Encounter;
 use App\Models\Patient;
+use App\Services\EncounterPdfService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 use Inertia\Response;
+use Symfony\Component\HttpFoundation\Response as HttpResponse;
 
 class EncounterController extends Controller
 {
@@ -228,5 +230,13 @@ class EncounterController extends Controller
 
         return redirect()->route('encounters.edit', $rectifier)
             ->with('success', 'Rectification encounter created. Edit and re-sign.');
+    }
+
+    public function pdf(Encounter $encounter, EncounterPdfService $pdfService): HttpResponse
+    {
+        $this->authorize('downloadPdf', $encounter);
+
+        $pdf = $pdfService->generate($encounter);
+        return $pdf->download($pdfService->filename($encounter));
     }
 }
