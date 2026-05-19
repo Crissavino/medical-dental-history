@@ -9,6 +9,7 @@ use App\Models\AuditLog;
 use App\Models\Encounter;
 use App\Models\Patient;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -125,47 +126,59 @@ class EncounterController extends Controller
         $patientSignedAt = now();
         $dentistSignedAt = now();
 
-        $treatmentsJson = $encounter->treatments()->orderBy('id')->get([
-            'id', 'tooth_number', 'treatment_code', 'description', 'surface', 'cost', 'status',
-        ])->toJson();
+        DB::transaction(function () use ($request, $encounter, $patientSignedAt, $dentistSignedAt) {
+            $locked = Encounter::where('id', $encounter->id)
+                ->where('status', 'in_progress')
+                ->lockForUpdate()
+                ->first();
 
-        $hash = hash('sha256', implode('|', [
-            $encounter->id,
-            $encounter->encounter_date?->toDateString(),
-            (string) $encounter->chief_complaint,
-            (string) $encounter->diagnosis,
-            (string) $encounter->clinical_notes,
-            $treatmentsJson,
-            $patientSignedAt->toIso8601String(),
-            $dentistSignedAt->toIso8601String(),
-        ]));
+            if (!$locked) {
+                // already signed by a concurrent request
+                abort(409, 'Encounter is no longer in_progress.');
+            }
 
-        $encounter->update([
-            'patient_signature_data' => $request->input('patient_signature_data'),
-            'dentist_signature_data' => $request->input('dentist_signature_data'),
-            'patient_signed_at' => $patientSignedAt,
-            'dentist_signed_by' => auth()->id(),
-            'dentist_signed_at' => $dentistSignedAt,
-            'signed_ip' => $request->ip(),
-            'signed_hash' => $hash,
-            'status' => 'completed',
-        ]);
+            $treatments = $locked->treatments()->orderBy('id')->get([
+                'id', 'tooth_number', 'treatment_code', 'description', 'surface', 'cost', 'status',
+            ]);
 
-        AuditLog::create([
-            'entity_type' => Encounter::class,
-            'entity_id' => $encounter->id,
-            'user_id' => auth()->id(),
-            'action' => 'signed',
-            'ip_address' => $request->ip(),
-            'metadata_json' => [
-                'patient_signed_at' => $patientSignedAt->toIso8601String(),
-                'dentist_signed_at' => $dentistSignedAt->toIso8601String(),
-                'dentist_signed_by_user_id' => auth()->id(),
+            $hash = hash('sha256', implode('|', [
+                $locked->id,
+                $locked->encounter_date?->toDateString(),
+                (string) $locked->chief_complaint,
+                (string) $locked->diagnosis,
+                (string) $locked->clinical_notes,
+                $treatments->toJson(),
+                $patientSignedAt->toIso8601String(),
+                $dentistSignedAt->toIso8601String(),
+            ]));
+
+            $locked->update([
+                'patient_signature_data' => $request->input('patient_signature_data'),
+                'dentist_signature_data' => $request->input('dentist_signature_data'),
+                'patient_signed_at' => $patientSignedAt,
+                'dentist_signed_by' => auth()->id(),
+                'dentist_signed_at' => $dentistSignedAt,
                 'signed_ip' => $request->ip(),
-                'treatments_count' => $encounter->treatments()->count(),
-                'encounter_hash' => $hash,
-            ],
-        ]);
+                'signed_hash' => $hash,
+                'status' => 'completed',
+            ]);
+
+            AuditLog::create([
+                'entity_type' => Encounter::class,
+                'entity_id' => $locked->id,
+                'user_id' => auth()->id(),
+                'action' => 'signed',
+                'ip_address' => $request->ip(),
+                'metadata_json' => [
+                    'patient_signed_at' => $patientSignedAt->toIso8601String(),
+                    'dentist_signed_at' => $dentistSignedAt->toIso8601String(),
+                    'dentist_signed_by_user_id' => auth()->id(),
+                    'signed_ip' => $request->ip(),
+                    'treatments_count' => count($treatments),
+                    'encounter_hash' => $hash,
+                ],
+            ]);
+        });
 
         return redirect()->route('encounters.show', $encounter)
             ->with('success', 'Encounter signed and locked.');

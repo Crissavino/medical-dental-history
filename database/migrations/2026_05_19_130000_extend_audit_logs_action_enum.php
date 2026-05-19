@@ -71,6 +71,15 @@ return new class extends Migration
             DB::statement("INSERT INTO audit_logs__old (id, entity_type, entity_id, user_id, action, metadata_json, ip_address, created_at) SELECT id, entity_type, entity_id, user_id, action, metadata_json, ip_address, created_at FROM audit_logs WHERE action IN ('created','updated','deleted')");
             Schema::drop('audit_logs');
             Schema::rename('audit_logs__old', 'audit_logs');
+            return;
         }
+
+        // Fallback: mirror up()'s fallback. The column was widened to string in up();
+        // on down() we leave it as string (we cannot safely narrow without losing
+        // rows where action is 'signed' or 'rectified'). This branch is academic —
+        // production is MySQL only — but exists for symmetry on other drivers.
+        Schema::table('audit_logs', function (Blueprint $table) {
+            $table->string('action', 32)->change();
+        });
     }
 };

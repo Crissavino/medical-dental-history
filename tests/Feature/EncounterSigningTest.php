@@ -113,4 +113,25 @@ class EncounterSigningTest extends TestCase
             ])
             ->assertSessionHasErrors();
     }
+
+    public function test_cannot_sign_already_completed_encounter(): void
+    {
+        $dentist = User::factory()->role('dentist')->create();
+        $encounter = Encounter::factory()->create(['status' => 'in_progress']);
+        Treatment::factory()->create(['encounter_id' => $encounter->id]);
+
+        // First sign (succeeds)
+        $this->actingAs($dentist)
+            ->post(route('encounters.sign', $encounter), [
+                'patient_signature_data' => $this->pngBase64,
+                'dentist_signature_data' => $this->pngBase64,
+            ])->assertRedirect();
+
+        // Second sign (rejected — status is now 'completed', authorize() returns false)
+        $this->actingAs($dentist)
+            ->post(route('encounters.sign', $encounter), [
+                'patient_signature_data' => $this->pngBase64,
+                'dentist_signature_data' => $this->pngBase64,
+            ])->assertForbidden();
+    }
 }
