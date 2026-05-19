@@ -8,7 +8,11 @@ class UpdateTreatmentRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return $this->user()->hasRole('admin', 'dentist', 'assistant');
+        $treatment = $this->route('treatment');
+        if ($treatment && $treatment->encounter && $treatment->encounter->isLocked()) {
+            return false;
+        }
+        return $this->user()?->hasRole('admin', 'dentist', 'assistant') ?? false;
     }
 
     public function rules(): array

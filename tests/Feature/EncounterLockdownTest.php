@@ -40,4 +40,56 @@ class EncounterLockdownTest extends TestCase
         $this->assertTrue($original->rectifier->is($rectifier));
         $this->assertTrue($rectifier->rectifies->is($original));
     }
+
+    public function test_completed_encounter_cannot_be_updated(): void
+    {
+        $admin = \App\Models\User::factory()->role('admin')->create();
+        $encounter = Encounter::factory()->completed()->create();
+
+        $this->actingAs($admin)
+            ->put(route('encounters.update', $encounter), [
+                'encounter_date' => '2026-01-01',
+                'chief_complaint' => 'changed',
+            ])
+            ->assertForbidden();
+    }
+
+    public function test_completed_encounter_cannot_be_deleted(): void
+    {
+        $admin = \App\Models\User::factory()->role('admin')->create();
+        $encounter = Encounter::factory()->completed()->create();
+
+        $this->actingAs($admin)
+            ->delete(route('encounters.destroy', $encounter))
+            ->assertForbidden();
+    }
+
+    public function test_treatment_cannot_be_created_on_completed_encounter(): void
+    {
+        $admin = \App\Models\User::factory()->role('admin')->create();
+        $encounter = Encounter::factory()->completed()->create();
+
+        $this->actingAs($admin)
+            ->post(route('treatments.store', $encounter), [
+                'treatment_code' => 'D1234',
+                'description' => 'late add',
+            ])
+            ->assertForbidden();
+    }
+
+    public function test_attachment_cannot_be_created_on_completed_encounter(): void
+    {
+        $admin = \App\Models\User::factory()->role('admin')->create();
+        $encounter = Encounter::factory()->completed()->create();
+
+        $file = \Illuminate\Http\UploadedFile::fake()->create('xray.png', 100, 'image/png');
+
+        $this->actingAs($admin)
+            ->post(route('attachments.store'), [
+                'attachable_type' => \App\Models\Encounter::class,
+                'attachable_id' => $encounter->id,
+                'file' => $file,
+            ])
+            ->assertForbidden();
+    }
 }

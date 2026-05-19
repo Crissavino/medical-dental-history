@@ -8,7 +8,16 @@ class UpdateEncounterRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return $this->user()->hasRole('admin', 'dentist', 'assistant');
+        $user = $this->user();
+        $encounter = $this->route('encounter');
+
+        if (!$user || !$user->hasRole('admin', 'dentist', 'assistant')) {
+            return false;
+        }
+        if ($encounter instanceof \App\Models\Encounter && $encounter->isLocked()) {
+            return false;
+        }
+        return true;
     }
 
     public function rules(): array

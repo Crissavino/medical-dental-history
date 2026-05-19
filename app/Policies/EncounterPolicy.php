@@ -24,11 +24,35 @@ class EncounterPolicy
 
     public function update(User $user, Encounter $encounter): bool
     {
+        if ($encounter->isLocked()) {
+            return false;
+        }
         return $user->hasRole('admin', 'dentist', 'assistant');
     }
 
     public function delete(User $user, Encounter $encounter): bool
     {
+        if ($encounter->isLocked()) {
+            return false;
+        }
         return $user->hasRole('admin', 'dentist');
+    }
+
+    public function sign(User $user, Encounter $encounter): bool
+    {
+        return !$encounter->isLocked()
+            && $user->hasRole('admin', 'dentist');
+    }
+
+    public function rectify(User $user, Encounter $encounter): bool
+    {
+        return $encounter->status === 'completed'
+            && $user->hasRole('admin', 'dentist');
+    }
+
+    public function downloadPdf(User $user, Encounter $encounter): bool
+    {
+        return $encounter->status === 'completed'
+            && $user->hasRole('admin', 'dentist');
     }
 }

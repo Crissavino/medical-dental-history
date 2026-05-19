@@ -8,7 +8,11 @@ class StoreTreatmentRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return $this->user()->hasRole('admin', 'dentist', 'assistant');
+        $encounter = $this->route('encounter');
+        if ($encounter instanceof \App\Models\Encounter && $encounter->isLocked()) {
+            return false;
+        }
+        return $this->user()?->hasRole('admin', 'dentist', 'assistant') ?? false;
     }
 
     public function rules(): array

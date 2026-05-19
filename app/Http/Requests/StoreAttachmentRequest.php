@@ -8,7 +8,20 @@ class StoreAttachmentRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return $this->user()->hasRole('admin', 'dentist', 'assistant');
+        if (!$this->user()?->hasRole('admin', 'dentist', 'assistant')) {
+            return false;
+        }
+
+        $type = $this->input('attachable_type');
+        $id = $this->input('attachable_id');
+        if ($type === \App\Models\Encounter::class && $id) {
+            $parent = \App\Models\Encounter::find($id);
+            if ($parent && $parent->isLocked()) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     public function rules(): array
