@@ -14,7 +14,7 @@ class StoreAttachmentRequest extends FormRequest
 
         $type = $this->input('attachable_type');
         $id = $this->input('attachable_id');
-        if ($type === \App\Models\Encounter::class && $id) {
+        if ($type === 'encounter' && $id) {
             $parent = \App\Models\Encounter::find($id);
             if ($parent && $parent->isLocked()) {
                 return false;

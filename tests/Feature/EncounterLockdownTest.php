@@ -86,7 +86,7 @@ class EncounterLockdownTest extends TestCase
 
         $this->actingAs($admin)
             ->post(route('attachments.store'), [
-                'attachable_type' => \App\Models\Encounter::class,
+                'attachable_type' => 'encounter',
                 'attachable_id' => $encounter->id,
                 'file' => $file,
             ])
