@@ -183,4 +183,50 @@ class EncounterController extends Controller
         return redirect()->route('encounters.show', $encounter)
             ->with('success', 'Encounter signed and locked.');
     }
+
+    public function rectify(Encounter $encounter): RedirectResponse
+    {
+        $this->authorize('rectify', $encounter);
+
+        $rectifier = DB::transaction(function () use ($encounter) {
+            $rectifier = $encounter->patient->encounters()->create([
+                'provider_id' => auth()->id(),
+                'encounter_date' => now()->toDateString(),
+                'chief_complaint' => $encounter->chief_complaint,
+                'clinical_notes' => $encounter->clinical_notes,
+                'diagnosis' => $encounter->diagnosis,
+                'status' => 'in_progress',
+                'rectifies_encounter_id' => $encounter->id,
+            ]);
+
+            foreach ($encounter->treatments as $treatment) {
+                $rectifier->treatments()->create([
+                    'tooth_number' => $treatment->tooth_number,
+                    'treatment_code' => $treatment->treatment_code,
+                    'description' => $treatment->description,
+                    'surface' => $treatment->surface,
+                    'cost' => $treatment->cost,
+                    'status' => $treatment->status,
+                    'notes' => $treatment->notes ?? null,
+                ]);
+            }
+
+            AuditLog::create([
+                'entity_type' => Encounter::class,
+                'entity_id' => $encounter->id,
+                'user_id' => auth()->id(),
+                'action' => 'rectified',
+                'ip_address' => request()->ip(),
+                'metadata_json' => [
+                    'rectified_by_encounter_id' => $rectifier->id,
+                    'rectified_by_user_id' => auth()->id(),
+                ],
+            ]);
+
+            return $rectifier;
+        });
+
+        return redirect()->route('encounters.edit', $rectifier)
+            ->with('success', 'Rectification encounter created. Edit and re-sign.');
+    }
 }

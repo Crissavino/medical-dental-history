@@ -85,6 +85,8 @@ Route::middleware('auth')->group(function () {
         ->name('encounters.destroy');
     Route::post('/encounters/{encounter}/sign', [EncounterController::class, 'sign'])
         ->name('encounters.sign');
+    Route::post('/encounters/{encounter}/rectify', [EncounterController::class, 'rectify'])
+        ->name('encounters.rectify');
 
     // Treatments (nested under encounter)
     Route::post('/encounters/{encounter}/treatments', [TreatmentController::class, 'store'])
