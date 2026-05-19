@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\SignEncounterRequest;
 use App\Http\Requests\StoreEncounterRequest;
 use App\Http\Requests\UpdateEncounterRequest;
+use App\Models\AuditLog;
 use App\Models\Encounter;
 use App\Models\Patient;
 use Illuminate\Http\RedirectResponse;
@@ -116,5 +118,56 @@ class EncounterController extends Controller
 
         return redirect()->route('patients.show', $patient)
             ->with('success', 'Encounter deleted successfully.');
+    }
+
+    public function sign(SignEncounterRequest $request, Encounter $encounter): RedirectResponse
+    {
+        $patientSignedAt = now();
+        $dentistSignedAt = now();
+
+        $treatmentsJson = $encounter->treatments()->orderBy('id')->get([
+            'id', 'tooth_number', 'treatment_code', 'description', 'surface', 'cost', 'status',
+        ])->toJson();
+
+        $hash = hash('sha256', implode('|', [
+            $encounter->id,
+            $encounter->encounter_date?->toDateString(),
+            (string) $encounter->chief_complaint,
+            (string) $encounter->diagnosis,
+            (string) $encounter->clinical_notes,
+            $treatmentsJson,
+            $patientSignedAt->toIso8601String(),
+            $dentistSignedAt->toIso8601String(),
+        ]));
+
+        $encounter->update([
+            'patient_signature_data' => $request->input('patient_signature_data'),
+            'dentist_signature_data' => $request->input('dentist_signature_data'),
+            'patient_signed_at' => $patientSignedAt,
+            'dentist_signed_by' => auth()->id(),
+            'dentist_signed_at' => $dentistSignedAt,
+            'signed_ip' => $request->ip(),
+            'signed_hash' => $hash,
+            'status' => 'completed',
+        ]);
+
+        AuditLog::create([
+            'entity_type' => Encounter::class,
+            'entity_id' => $encounter->id,
+            'user_id' => auth()->id(),
+            'action' => 'signed',
+            'ip_address' => $request->ip(),
+            'metadata_json' => [
+                'patient_signed_at' => $patientSignedAt->toIso8601String(),
+                'dentist_signed_at' => $dentistSignedAt->toIso8601String(),
+                'dentist_signed_by_user_id' => auth()->id(),
+                'signed_ip' => $request->ip(),
+                'treatments_count' => $encounter->treatments()->count(),
+                'encounter_hash' => $hash,
+            ],
+        ]);
+
+        return redirect()->route('encounters.show', $encounter)
+            ->with('success', 'Encounter signed and locked.');
     }
 }
