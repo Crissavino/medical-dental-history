@@ -5,6 +5,7 @@ import { useI18n } from 'vue-i18n';
 import AppLayout from '@/Components/Layout/AppLayout.vue';
 import InputLabel from '@/Components/InputLabel.vue';
 import InputError from '@/Components/InputError.vue';
+import SignWizard from '@/Pages/Encounters/SignWizard.vue';
 import { useToothNotation } from '@/Composables/useToothNotation';
 import type { Encounter, Patient } from '@/types';
 import {
@@ -20,7 +21,10 @@ const { allTeeth, upperTeeth, lowerTeeth, getToothName, quadrants } = useToothNo
 const props = defineProps<{
     encounter?: Encounter;
     patient?: Patient;
+    currentUser?: { id: number; name: string; has_signature: boolean };
 }>();
+
+const signWizardOpen = ref(false);
 
 const isEditing = computed(() => !!props.encounter);
 
@@ -329,9 +333,25 @@ const surfaces = [
                         </svg>
                         {{ t('app.save') }}
                     </button>
+                    <button
+                        v-if="encounter && encounter.status === 'in_progress' && (encounter.treatments?.length ?? 0) > 0"
+                        type="button"
+                        @click="signWizardOpen = true"
+                        class="inline-flex items-center gap-1.5 rounded-lg bg-emerald-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-emerald-500"
+                    >
+                        {{ t('encounter.close_and_sign') }}
+                    </button>
                 </div>
             </form>
         </div>
+
+        <SignWizard
+            v-if="encounter && currentUser"
+            :encounter="encounter"
+            :open="signWizardOpen"
+            :current-user="currentUser"
+            @close="signWizardOpen = false"
+        />
 
         <!-- Tooth Selector Modal -->
         <Teleport to="body">

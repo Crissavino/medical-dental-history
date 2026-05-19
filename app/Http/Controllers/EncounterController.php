@@ -38,6 +38,11 @@ class EncounterController extends Controller
 
         return Inertia::render('Encounters/Editor', [
             'patient' => $patient,
+            'currentUser' => [
+                'id' => auth()->id(),
+                'name' => auth()->user()->name,
+                'has_signature' => (bool) auth()->user()->signature_data,
+            ],
         ]);
     }
 
@@ -67,6 +72,9 @@ class EncounterController extends Controller
         $encounter->load([
             'patient',
             'provider:id,name',
+            'dentistSigner:id,name',
+            'rectifies:id,encounter_date',
+            'rectifier:id,encounter_date,rectifies_encounter_id',
             'treatments',
             'attachments.uploader:id,name',
         ]);
@@ -84,6 +92,11 @@ class EncounterController extends Controller
 
         return Inertia::render('Encounters/Editor', [
             'encounter' => $encounter,
+            'currentUser' => [
+                'id' => auth()->id(),
+                'name' => auth()->user()->name,
+                'has_signature' => (bool) auth()->user()->signature_data,
+            ],
         ]);
     }
 

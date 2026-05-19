@@ -206,6 +206,16 @@ export interface Encounter {
     provider?: User;
     treatments?: Treatment[];
     attachments?: Attachment[];
+    patient_signature_data?: string | null;
+    dentist_signature_data?: string | null;
+    patient_signed_at?: string | null;
+    dentist_signed_at?: string | null;
+    signed_ip?: string | null;
+    signed_hash?: string | null;
+    rectifies_encounter_id?: number | null;
+    rectifies?: { id: number; encounter_date: string } | null;
+    rectifier?: { id: number; encounter_date: string; rectifies_encounter_id: number } | null;
+    dentist_signer?: { id: number; name: string } | null;
 }
 
 export interface Treatment {

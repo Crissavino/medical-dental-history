@@ -75,6 +75,11 @@ function confirmDelete() {
 function deleteEncounter() {
     router.delete(route('encounters.destroy', props.encounter.id));
 }
+
+function rectify() {
+    if (!confirm('Create a rectification encounter? The original stays locked.')) return;
+    router.post(route('encounters.rectify', props.encounter.id));
+}
 </script>
 
 <template>
@@ -120,7 +125,23 @@ function deleteEncounter() {
                         </span>
                     </div>
                 </div>
-                <div class="flex flex-wrap gap-2">
+                <div v-if="encounter.status === 'completed'" class="flex flex-wrap gap-2">
+                    <a
+                        :href="route('encounters.pdf', encounter.id)"
+                        class="inline-flex items-center gap-1.5 rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50"
+                    >
+                        <ArrowDownTrayIcon class="h-4 w-4" />
+                        {{ t('encounter.download_signed_pdf') }}
+                    </a>
+                    <button
+                        type="button"
+                        @click="rectify"
+                        class="inline-flex items-center gap-1.5 rounded-lg border border-amber-300 bg-white px-3 py-2 text-sm font-medium text-amber-700 shadow-sm hover:bg-amber-50"
+                    >
+                        {{ t('encounter.rectify') }}
+                    </button>
+                </div>
+                <div v-else class="flex flex-wrap gap-2">
                     <Link
                         :href="route('encounters.edit', encounter.id)"
                         class="inline-flex items-center gap-1.5 rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 transition-colors"
@@ -138,6 +159,17 @@ function deleteEncounter() {
                     </button>
                 </div>
             </div>
+        </div>
+
+        <!-- Signed banner + rectification banners -->
+        <div v-if="encounter.status === 'completed' && encounter.dentist_signed_at" class="mb-4 rounded-xl border border-emerald-200 bg-emerald-50 p-4 text-sm text-emerald-800">
+            🔒 {{ t('encounter.sign_locked_banner', { at: formatDateTime(encounter.dentist_signed_at!) }) }}
+        </div>
+        <div v-if="encounter.rectifies" class="mb-4 rounded-xl border border-amber-200 bg-amber-50 p-3 text-sm text-amber-800">
+            {{ t('encounter.rectifies_banner', { id: encounter.rectifies.id }) }}
+        </div>
+        <div v-if="encounter.rectifier" class="mb-4 rounded-xl border border-gray-200 bg-gray-50 p-3 text-sm text-gray-700">
+            {{ t('encounter.rectified_by_banner', { id: encounter.rectifier.id, at: encounter.rectifier.encounter_date }) }}
         </div>
 
         <div class="grid grid-cols-1 gap-6 lg:grid-cols-3">
@@ -214,6 +246,23 @@ function deleteEncounter() {
                     </div>
                     <div v-else class="p-6 text-center text-sm text-gray-500">
                         {{ t('treatment.no_treatments') }}
+                    </div>
+                </div>
+
+                <!-- Signatures -->
+                <div v-if="encounter.status === 'completed'" class="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
+                    <h3 class="text-sm font-semibold uppercase tracking-wider text-gray-500">{{ t('encounter.signatures') }}</h3>
+                    <div class="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-2">
+                        <div class="rounded-lg border border-gray-200 p-3">
+                            <img v-if="encounter.patient_signature_data" :src="encounter.patient_signature_data" alt="patient signature" class="max-h-24" />
+                            <p class="mt-2 text-sm font-medium">{{ encounter.patient?.first_name }} {{ encounter.patient?.last_name }}</p>
+                            <p class="text-xs text-gray-500">{{ formatDateTime(encounter.patient_signed_at!) }}</p>
+                        </div>
+                        <div class="rounded-lg border border-gray-200 p-3">
+                            <img v-if="encounter.dentist_signature_data" :src="encounter.dentist_signature_data" alt="dentist signature" class="max-h-24" />
+                            <p class="mt-2 text-sm font-medium">{{ encounter.dentist_signer?.name ?? encounter.provider?.name }}</p>
+                            <p class="text-xs text-gray-500">{{ formatDateTime(encounter.dentist_signed_at!) }}</p>
+                        </div>
                     </div>
                 </div>
             </div>

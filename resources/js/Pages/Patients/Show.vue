@@ -718,13 +718,22 @@ function confirmDelete() {
                 <div v-show="currentTab === 2">
                     <div class="mb-4 flex items-center justify-between">
                         <h3 class="text-lg font-semibold text-gray-900">{{ t('encounter.title') }}</h3>
-                        <Link
-                            :href="route('encounters.create', { patient: patient.id })"
-                            class="inline-flex items-center gap-1.5 rounded-lg bg-primary-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-primary-500 transition-colors"
-                        >
-                            <PlusIcon class="h-4 w-4" />
-                            {{ t('encounter.new') }}
-                        </Link>
+                        <div class="flex flex-wrap gap-2">
+                            <a
+                                :href="route('patients.clinical-history', patient.id)"
+                                class="inline-flex items-center gap-1.5 rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50"
+                            >
+                                <ArrowDownTrayIcon class="h-4 w-4" />
+                                {{ t('encounter.download_full_history') }}
+                            </a>
+                            <Link
+                                :href="route('encounters.create', { patient: patient.id })"
+                                class="inline-flex items-center gap-1.5 rounded-lg bg-primary-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-primary-500 transition-colors"
+                            >
+                                <PlusIcon class="h-4 w-4" />
+                                {{ t('encounter.new') }}
+                            </Link>
+                        </div>
                     </div>
 
                     <div v-if="patient.encounters && patient.encounters.length > 0" class="space-y-4">
@@ -747,6 +756,9 @@ function confirmDelete() {
                                                 >
                                                     {{ t(`encounter.status_${encounter.status}`) }}
                                                 </span>
+                                                <span v-if="encounter.status === 'completed' && encounter.patient_signature_data && encounter.dentist_signature_data" class="ml-1 text-emerald-600" title="Signed and locked">🔒</span>
+                                                <span v-else-if="encounter.status === 'completed'" class="ml-1 text-amber-600" title="Completed without signatures (legacy)">⚠️</span>
+                                                <span v-if="encounter.rectifies_encounter_id" class="ml-1 inline-flex items-center rounded-full bg-gray-100 px-2 py-0.5 text-xs text-gray-700">Rectifies #{{ encounter.rectifies_encounter_id }}</span>
                                             </div>
                                             <p v-if="encounter.chief_complaint" class="mt-1 text-sm text-gray-600">
                                                 {{ encounter.chief_complaint }}
