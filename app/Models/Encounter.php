@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -22,12 +23,22 @@ class Encounter extends Model
         'clinical_notes',
         'diagnosis',
         'status',
+        'patient_signature_data',
+        'dentist_signature_data',
+        'patient_signed_at',
+        'dentist_signed_by',
+        'dentist_signed_at',
+        'signed_ip',
+        'signed_hash',
+        'rectifies_encounter_id',
     ];
 
     protected function casts(): array
     {
         return [
             'encounter_date' => 'date',
+            'patient_signed_at' => 'datetime',
+            'dentist_signed_at' => 'datetime',
         ];
     }
 
@@ -41,6 +52,11 @@ class Encounter extends Model
         return $this->belongsTo(User::class, 'provider_id');
     }
 
+    public function dentistSigner(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'dentist_signed_by');
+    }
+
     public function treatments(): HasMany
     {
         return $this->hasMany(Treatment::class);
@@ -49,5 +65,27 @@ class Encounter extends Model
     public function attachments(): MorphMany
     {
         return $this->morphMany(Attachment::class, 'attachable');
+    }
+
+    public function rectifies(): BelongsTo
+    {
+        return $this->belongsTo(self::class, 'rectifies_encounter_id');
+    }
+
+    public function rectifier(): HasOne
+    {
+        return $this->hasOne(self::class, 'rectifies_encounter_id');
+    }
+
+    public function isLocked(): bool
+    {
+        return in_array($this->status, ['completed', 'cancelled'], true);
+    }
+
+    public function isSigned(): bool
+    {
+        return $this->status === 'completed'
+            && $this->patient_signature_data !== null
+            && $this->dentist_signature_data !== null;
     }
 }
