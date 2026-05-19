@@ -2,7 +2,7 @@
 import { ref, computed, onMounted, onBeforeUnmount, watch, nextTick } from 'vue';
 import { Head, useForm } from '@inertiajs/vue3';
 import { useI18n } from 'vue-i18n';
-import SignaturePadLib from 'signature_pad';
+import SignaturePad from '@/Components/SignaturePad.vue';
 import InputLabel from '@/Components/InputLabel.vue';
 import InputError from '@/Components/InputError.vue';
 import type { Patient, AnamnesisVersion, Medication, AntibioticDetail } from '@/types';
@@ -230,43 +230,30 @@ function removeAntibiotic(i: number) {
 }
 
 // --- Signature pad ---
-const signatureCanvas = ref<HTMLCanvasElement | null>(null);
-const signatureContainer = ref<HTMLDivElement | null>(null);
-let signaturePad: SignaturePadLib | null = null;
+// Draw-mode is delegated to the SignaturePad component which writes its base64
+// PNG directly to `form.signature_data` via v-model.
+// Type-mode renders the typed name onto its own dedicated canvas and updates
+// `form.signature_data` whenever the typed name changes.
 const signatureMode = ref<'draw' | 'type'>('draw');
 const typedName = ref('');
+const typedCanvas = ref<HTMLCanvasElement | null>(null);
+const typedContainer = ref<HTMLDivElement | null>(null);
 
-function initSignaturePad() {
-    if (signatureCanvas.value) {
-        signaturePad = new SignaturePadLib(signatureCanvas.value, {
-            backgroundColor: 'rgb(255, 255, 255)',
-        });
-        resizeCanvas();
-    }
-}
-
-function resizeCanvas() {
-    if (!signatureCanvas.value || !signatureContainer.value) return;
-    const canvas = signatureCanvas.value;
-    const container = signatureContainer.value;
+function resizeTypedCanvas() {
+    if (!typedCanvas.value || !typedContainer.value) return;
+    const canvas = typedCanvas.value;
+    const container = typedContainer.value;
     const ratio = Math.max(window.devicePixelRatio || 1, 1);
     canvas.width = container.offsetWidth * ratio;
     canvas.height = 160 * ratio;
     canvas.style.width = container.offsetWidth + 'px';
     canvas.style.height = '160px';
     canvas.getContext('2d')?.scale(ratio, ratio);
-    signaturePad?.clear();
-}
-
-function clearSignature() {
-    signaturePad?.clear();
-    typedName.value = '';
-    form.signature_data = null;
 }
 
 function renderTypedSignature() {
-    if (!signatureCanvas.value) return;
-    const canvas = signatureCanvas.value;
+    if (!typedCanvas.value) return;
+    const canvas = typedCanvas.value;
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
     const ratio = Math.max(window.devicePixelRatio || 1, 1);
@@ -280,6 +267,11 @@ function renderTypedSignature() {
         ctx.textBaseline = 'middle';
         ctx.fillText(typedName.value, (canvas.width / ratio) / 2, (canvas.height / ratio) / 2);
     }
+    if (typedName.value.trim()) {
+        form.signature_data = canvas.toDataURL('image/png');
+    } else {
+        form.signature_data = null;
+    }
 }
 
 watch(typedName, () => {
@@ -289,59 +281,45 @@ watch(typedName, () => {
 });
 
 watch(signatureMode, async (newMode) => {
+    // Reset signature data whenever the user switches modes so we never carry
+    // over the previous mode's PNG into the submitted form.
+    form.signature_data = null;
     await nextTick();
-    if (newMode === 'draw') {
-        initSignaturePad();
-    } else {
-        signaturePad?.off();
+    if (newMode === 'type') {
+        resizeTypedCanvas();
         renderTypedSignature();
     }
 });
 
-function captureSignature() {
-    if (!signatureCanvas.value) return;
-    if (signatureMode.value === 'draw' && signaturePad && !signaturePad.isEmpty()) {
-        form.signature_data = signaturePad.toDataURL('image/png');
-    } else if (signatureMode.value === 'type' && typedName.value.trim()) {
-        form.signature_data = signatureCanvas.value.toDataURL('image/png');
-    } else {
-        form.signature_data = null;
-    }
+function clearTypedSignature() {
+    typedName.value = '';
+    renderTypedSignature();
 }
 
-let resizeHandler: (() => void) | null = null;
+let typedResizeHandler: (() => void) | null = null;
 
 onMounted(() => {
-    resizeHandler = () => {
-        if (signatureMode.value === 'draw') {
-            resizeCanvas();
-        } else {
-            resizeCanvas();
-            signaturePad?.off();
+    typedResizeHandler = () => {
+        if (signatureMode.value === 'type') {
+            resizeTypedCanvas();
             renderTypedSignature();
         }
     };
-    window.addEventListener('resize', resizeHandler);
+    window.addEventListener('resize', typedResizeHandler);
 });
 
 onBeforeUnmount(() => {
-    if (resizeHandler) {
-        window.removeEventListener('resize', resizeHandler);
+    if (typedResizeHandler) {
+        window.removeEventListener('resize', typedResizeHandler);
     }
-    signaturePad?.off();
 });
 
-// Initialize signature pad when entering step 8
+// When entering step 8 in type mode, size + render the typed canvas.
 watch(currentStep, async (step) => {
-    if (step === 8) {
+    if (step === 8 && signatureMode.value === 'type') {
         await nextTick();
-        if (signatureMode.value === 'draw') {
-            initSignaturePad();
-        } else {
-            resizeCanvas();
-            signaturePad?.off();
-            renderTypedSignature();
-        }
+        resizeTypedCanvas();
+        renderTypedSignature();
     }
 });
 
@@ -360,7 +338,8 @@ function prevStep() {
 }
 
 function submit() {
-    captureSignature();
+    // `form.signature_data` is kept in sync by the SignaturePad component
+    // (draw mode) or `renderTypedSignature` (type mode), so we just submit.
     form.post(route('intake.store'), { preserveScroll: false });
 }
 
@@ -1308,31 +1287,34 @@ const isStep7Empty = computed(() =>
                                 </button>
                             </div>
 
-                            <!-- Type name input (shown in type mode) -->
-                            <div v-if="signatureMode === 'type'" class="mb-3">
-                                <input
-                                    v-model="typedName"
-                                    type="text"
-                                    class="block w-full rounded-lg border-gray-300 text-base shadow-sm focus:border-primary-500 focus:ring-primary-500"
-                                    :placeholder="t('anamnesis.signature_placeholder')"
-                                />
+                            <!-- Draw mode: delegated to SignaturePad component -->
+                            <div v-if="signatureMode === 'draw'">
+                                <SignaturePad v-model="form.signature_data" />
                             </div>
 
-                            <!-- Canvas container -->
-                            <div ref="signatureContainer" class="relative rounded-lg border-2 border-dashed border-gray-300 bg-white">
-                                <canvas ref="signatureCanvas" class="w-full touch-none" style="height: 160px" />
-                            </div>
-
-                            <!-- Clear button -->
-                            <div class="mt-2 flex justify-end">
-                                <button
-                                    type="button"
-                                    @click="clearSignature"
-                                    class="inline-flex items-center gap-1 rounded-lg bg-gray-100 px-3 py-1.5 text-xs font-medium text-gray-700 hover:bg-gray-200 transition-colors"
-                                >
-                                    <TrashIcon class="h-4 w-4" />
-                                    {{ t('anamnesis.signature_clear') }}
-                                </button>
+                            <!-- Type mode: typed-name rendered to its own canvas -->
+                            <div v-else>
+                                <div class="mb-3">
+                                    <input
+                                        v-model="typedName"
+                                        type="text"
+                                        class="block w-full rounded-lg border-gray-300 text-base shadow-sm focus:border-primary-500 focus:ring-primary-500"
+                                        :placeholder="t('anamnesis.signature_placeholder')"
+                                    />
+                                </div>
+                                <div ref="typedContainer" class="relative rounded-lg border-2 border-dashed border-gray-300 bg-white">
+                                    <canvas ref="typedCanvas" class="w-full touch-none" style="height: 160px" />
+                                </div>
+                                <div class="mt-2 flex justify-end">
+                                    <button
+                                        type="button"
+                                        @click="clearTypedSignature"
+                                        class="inline-flex items-center gap-1 rounded-lg bg-gray-100 px-3 py-1.5 text-xs font-medium text-gray-700 hover:bg-gray-200 transition-colors"
+                                    >
+                                        <TrashIcon class="h-4 w-4" />
+                                        {{ t('anamnesis.signature_clear') }}
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>
