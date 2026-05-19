@@ -154,9 +154,14 @@ class EncounterController extends Controller
                 $dentistSignedAt->toIso8601String(),
             ]));
 
+            $useStored = (bool) $request->input('use_stored_dentist_signature');
+            $dentistSig = $useStored
+                ? auth()->user()->signature_data
+                : $request->input('dentist_signature_data');
+
             $locked->update([
                 'patient_signature_data' => $request->input('patient_signature_data'),
-                'dentist_signature_data' => $request->input('dentist_signature_data'),
+                'dentist_signature_data' => $dentistSig,
                 'patient_signed_at' => $patientSignedAt,
                 'dentist_signed_by' => auth()->id(),
                 'dentist_signed_at' => $dentistSignedAt,

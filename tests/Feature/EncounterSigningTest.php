@@ -134,4 +134,23 @@ class EncounterSigningTest extends TestCase
                 'dentist_signature_data' => $this->pngBase64,
             ])->assertForbidden();
     }
+
+    public function test_dentist_can_sign_with_stored_signature(): void
+    {
+        $dentist = User::factory()->role('dentist')->create([
+            'signature_data' => $this->pngBase64,
+        ]);
+        $encounter = Encounter::factory()->create(['status' => 'in_progress']);
+        Treatment::factory()->create(['encounter_id' => $encounter->id]);
+
+        $this->actingAs($dentist)
+            ->post(route('encounters.sign', $encounter), [
+                'patient_signature_data' => $this->pngBase64,
+                'use_stored_dentist_signature' => true,
+            ])
+            ->assertRedirect();
+
+        $encounter->refresh();
+        $this->assertSame($this->pngBase64, $encounter->dentist_signature_data);
+    }
 }

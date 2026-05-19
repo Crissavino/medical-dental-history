@@ -23,7 +23,8 @@ class SignEncounterRequest extends FormRequest
     {
         return [
             'patient_signature_data' => ['required', 'string', 'starts_with:data:image/'],
-            'dentist_signature_data' => ['required', 'string', 'starts_with:data:image/'],
+            'dentist_signature_data' => ['nullable', 'string', 'starts_with:data:image/'],
+            'use_stored_dentist_signature' => ['nullable', 'boolean'],
         ];
     }
 
@@ -35,6 +36,20 @@ class SignEncounterRequest extends FormRequest
                 $validator->errors()->add(
                     'treatments',
                     'Encounter must have at least one treatment before signing.'
+                );
+            }
+            $useStored = (bool) $this->input('use_stored_dentist_signature');
+            $hasSig = (bool) $this->input('dentist_signature_data');
+            if (!$useStored && !$hasSig) {
+                $validator->errors()->add(
+                    'dentist_signature_data',
+                    'Dentist signature is required (or toggle "use stored").'
+                );
+            }
+            if ($useStored && !$this->user()?->signature_data) {
+                $validator->errors()->add(
+                    'use_stored_dentist_signature',
+                    'You have no stored professional signature.'
                 );
             }
         });
