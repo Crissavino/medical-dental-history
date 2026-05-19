@@ -5,10 +5,12 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StorePatientRequest;
 use App\Http\Requests\UpdatePatientRequest;
 use App\Models\Patient;
+use App\Services\ClinicalHistoryPdfService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
+use Symfony\Component\HttpFoundation\Response as HttpResponse;
 
 class PatientController extends Controller
 {
@@ -104,5 +106,12 @@ class PatientController extends Controller
 
         return redirect()->route('patients.index')
             ->with('success', 'Patient deleted successfully.');
+    }
+
+    public function clinicalHistory(Patient $patient, ClinicalHistoryPdfService $service): HttpResponse
+    {
+        $this->authorize('clinicalHistory', $patient);
+        $pdf = $service->generate($patient);
+        return $pdf->download($service->filename($patient));
     }
 }

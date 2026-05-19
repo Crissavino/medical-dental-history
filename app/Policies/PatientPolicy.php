@@ -36,4 +36,9 @@ class PatientPolicy
     {
         return $user->hasRole('admin', 'dentist');
     }
+
+    public function clinicalHistory(User $user, Patient $patient): bool
+    {
+        return $user->hasRole('admin', 'dentist');
+    }
 }

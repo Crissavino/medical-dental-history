@@ -53,6 +53,8 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     // Patients
+    Route::get('/patients/{patient}/clinical-history/pdf', [PatientController::class, 'clinicalHistory'])
+        ->name('patients.clinical-history');
     Route::resource('patients', PatientController::class);
 
     // Anamnesis (nested under patient)
