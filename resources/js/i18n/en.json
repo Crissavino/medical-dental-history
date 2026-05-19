@@ -358,6 +358,8 @@
     "action_created": "Created",
     "action_updated": "Updated",
     "action_deleted": "Deleted",
+    "action_signed": "Signed",
+    "action_rectified": "Rectified",
     "ip_address": "IP Address"
   }
 }

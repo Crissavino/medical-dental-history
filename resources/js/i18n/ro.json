@@ -358,6 +358,8 @@
     "action_created": "Creat",
     "action_updated": "Actualizat",
     "action_deleted": "Șters",
+    "action_signed": "Semnată",
+    "action_rectified": "Rectificată",
     "ip_address": "Adresă IP"
   }
 }

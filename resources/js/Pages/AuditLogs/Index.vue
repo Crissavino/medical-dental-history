@@ -29,10 +29,12 @@ const actionColors: Record<string, string> = {
     created: 'bg-green-100 text-green-800',
     updated: 'bg-blue-100 text-blue-800',
     deleted: 'bg-red-100 text-red-800',
+    signed: 'bg-purple-100 text-purple-800',
+    rectified: 'bg-amber-100 text-amber-800',
 };
 
 const entityTypes = ['Patient', 'Encounter', 'Treatment', 'Attachment', 'AnamnesisVersion'];
-const actions = ['created', 'updated', 'deleted'] as const;
+const actions = ['created', 'updated', 'deleted', 'signed', 'rectified'] as const;
 
 /** Tracks which audit-log rows are expanded (by log id). */
 const openLogs = reactive(new Set<number>());
