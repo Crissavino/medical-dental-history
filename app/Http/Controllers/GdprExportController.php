@@ -3,13 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Models\Patient;
+use App\Services\ClinicalHistoryPdfService;
 use Illuminate\Support\Facades\Storage;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use ZipArchive;
 
 class GdprExportController extends Controller
 {
-    public function export(Patient $patient): StreamedResponse
+    public function export(Patient $patient, ClinicalHistoryPdfService $clinicalHistory): StreamedResponse
     {
         $this->authorize('export', $patient);
 
@@ -81,6 +82,8 @@ class GdprExportController extends Controller
                 $zip->addFile($filePath, 'attachments/' . $attachment->file_name);
             }
         }
+
+        $zip->addFromString('clinical-history.pdf', $clinicalHistory->generate($patient)->output());
 
         $zip->close();
 
