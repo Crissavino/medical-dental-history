@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 class Treatment extends Model
 {
+    /** @use HasFactory<\Database\Factories\TreatmentFactory> */
     use HasFactory;
 
     protected $fillable = [

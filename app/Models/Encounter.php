@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Encounter extends Model
 {
+    /** @use HasFactory<\Database\Factories\EncounterFactory> */
     use HasFactory, SoftDeletes;
 
     protected $fillable = [

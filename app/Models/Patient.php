@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Patient extends Model
 {
+    /** @use HasFactory<\Database\Factories\PatientFactory> */
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
