@@ -96,12 +96,22 @@
     "tab_anamnesis": "Anamnesis",
     "tab_encounters": "Consultas",
     "tab_attachments": "Adjuntos",
+    "tab_notes": "Notas",
     "gdpr_export": "Exportar datos (GDPR)",
     "delete_confirm": "¿Estás seguro/a de que querés eliminar este paciente? Esta acción no se puede deshacer.",
     "search_placeholder": "Buscar por nombre, ID, teléfono o email...",
     "personal_info": "Información personal",
     "contact_info": "Datos de contacto",
     "save_and_fill_anamnesis": "Guardar y completar historia clínica"
+  },
+  "notes": {
+    "title": "Notas",
+    "add": "Agregar nota",
+    "edit": "Editar nota",
+    "save": "Guardar",
+    "placeholder": "Escribí una nota general sobre este paciente...",
+    "empty": "Todavía no hay notas.",
+    "delete_confirm": "¿Eliminar esta nota? Esta acción no se puede deshacer."
   },
   "encounter": {
     "title": "Consultas",

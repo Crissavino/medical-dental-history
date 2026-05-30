@@ -7,6 +7,7 @@ use App\Http\Controllers\EncounterController;
 use App\Http\Controllers\GdprExportController;
 use App\Http\Controllers\IntakeController;
 use App\Http\Controllers\PatientController;
+use App\Http\Controllers\PatientNoteController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TreatmentController;
 use App\Models\Encounter;
@@ -56,6 +57,14 @@ Route::middleware('auth')->group(function () {
     Route::get('/patients/{patient}/clinical-history/pdf', [PatientController::class, 'clinicalHistory'])
         ->name('patients.clinical-history');
     Route::resource('patients', PatientController::class);
+
+    // Patient notes (timestamped log)
+    Route::post('/patients/{patient}/notes', [PatientNoteController::class, 'store'])
+        ->name('patient-notes.store');
+    Route::put('/patient-notes/{patientNote}', [PatientNoteController::class, 'update'])
+        ->name('patient-notes.update');
+    Route::delete('/patient-notes/{patientNote}', [PatientNoteController::class, 'destroy'])
+        ->name('patient-notes.destroy');
 
     // Anamnesis (nested under patient)
     Route::get('/patients/{patient}/anamnesis/create', [AnamnesisController::class, 'create'])

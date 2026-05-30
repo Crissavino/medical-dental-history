@@ -70,6 +70,8 @@ class PatientController extends Controller
             'encounters.provider:id,name',
             'encounters.treatments',
             'attachments.uploader:id,name',
+            'notesLog' => fn ($q) => $q->orderByDesc('created_at'),
+            'notesLog.author:id,name',
         ]);
 
         return Inertia::render('Patients/Show', [
@@ -78,6 +80,7 @@ class PatientController extends Controller
                 ->with('signer:id,name')
                 ->orderByDesc('version')
                 ->get(),
+            'notes' => $patient->notesLog,
         ]);
     }
 

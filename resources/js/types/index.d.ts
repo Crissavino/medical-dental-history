@@ -32,6 +32,16 @@ export interface Patient {
     anamnesis_versions?: AnamnesisVersion[];
 }
 
+export interface PatientNote {
+    id: number;
+    patient_id: number;
+    user_id: number | null;
+    body: string;
+    author?: { id: number; name: string };
+    created_at: string;
+    updated_at: string;
+}
+
 export interface AnamnesisVersion {
     id: number;
     patient_id: number;

@@ -55,6 +55,11 @@ class Patient extends Model
         return $this->morphMany(Attachment::class, 'attachable');
     }
 
+    public function notesLog(): HasMany
+    {
+        return $this->hasMany(PatientNote::class);
+    }
+
     public function getFullNameAttribute(): string
     {
         return "{$this->first_name} {$this->last_name}";

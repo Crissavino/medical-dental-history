@@ -6,7 +6,7 @@ import SignaturePadLib from 'signature_pad';
 import AppLayout from '@/Components/Layout/AppLayout.vue';
 import Modal from '@/Components/UI/Modal.vue';
 import AttachmentUploader from '@/Components/Attachment/AttachmentUploader.vue';
-import type { Patient, AnamnesisVersion, PageProps } from '@/types';
+import type { Patient, AnamnesisVersion, PatientNote, PageProps } from '@/types';
 import {
     PencilSquareIcon,
     TrashIcon,
@@ -18,6 +18,7 @@ import {
     ChevronRightIcon,
     ClockIcon,
     CheckBadgeIcon,
+    ChatBubbleLeftEllipsisIcon,
 } from '@heroicons/vue/24/outline';
 
 const { t } = useI18n();
@@ -26,11 +27,64 @@ const page = usePage<PageProps>();
 const props = defineProps<{
     patient: Patient;
     anamnesisVersions: AnamnesisVersion[];
+    notes?: PatientNote[];
     selectedAnamnesis?: AnamnesisVersion;
 }>();
 
 const showDeleteModal = ref(false);
 const showUploadModal = ref(false);
+
+// --- Patient notes (timestamped log) ---
+const showNoteModal = ref(false);
+const editingNoteId = ref<number | null>(null);
+const noteBody = ref('');
+const noteSubmitting = ref(false);
+
+function canManageNote(note: PatientNote): boolean {
+    const user = page.props.auth.user;
+    return note.user_id === user.id || user.role === 'admin';
+}
+
+function openAddNote() {
+    editingNoteId.value = null;
+    noteBody.value = '';
+    showNoteModal.value = true;
+}
+
+function openEditNote(note: PatientNote) {
+    editingNoteId.value = note.id;
+    noteBody.value = note.body;
+    showNoteModal.value = true;
+}
+
+function closeNoteModal() {
+    showNoteModal.value = false;
+    editingNoteId.value = null;
+    noteBody.value = '';
+}
+
+function submitNote() {
+    if (!noteBody.value.trim()) return;
+    noteSubmitting.value = true;
+
+    const onFinish = () => { noteSubmitting.value = false; };
+    const options = {
+        preserveScroll: true,
+        onSuccess: () => closeNoteModal(),
+        onFinish,
+    };
+
+    if (editingNoteId.value) {
+        router.put(route('patient-notes.update', editingNoteId.value as any), { body: noteBody.value }, options);
+    } else {
+        router.post(route('patient-notes.store', props.patient.id), { body: noteBody.value }, options);
+    }
+}
+
+function deleteNote(note: PatientNote) {
+    if (!confirm(t('notes.delete_confirm'))) return;
+    router.delete(route('patient-notes.destroy', note.id as any), { preserveScroll: true });
+}
 const pdfMenuOpenId = ref<number | null>(null);
 
 function togglePdfMenu(versionId: number) {
@@ -243,6 +297,7 @@ const tabs = computed(() => [
     t('patient.tab_anamnesis'),
     t('patient.tab_encounters'),
     t('patient.tab_attachments'),
+    t('patient.tab_notes'),
 ]);
 
 const statusColors: Record<string, string> = {
@@ -857,6 +912,66 @@ function confirmDelete() {
                         </button>
                     </div>
                 </div>
+
+                <!-- Notes tab -->
+                <div v-show="currentTab === 4">
+                    <div class="mb-4 flex items-center justify-between">
+                        <h3 class="text-lg font-semibold text-gray-900">{{ t('notes.title') }}</h3>
+                        <button
+                            type="button"
+                            @click="openAddNote"
+                            class="inline-flex items-center gap-1.5 rounded-lg bg-primary-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-primary-500 transition-colors"
+                        >
+                            <PlusIcon class="h-4 w-4" />
+                            {{ t('notes.add') }}
+                        </button>
+                    </div>
+
+                    <div v-if="notes && notes.length > 0" class="space-y-3">
+                        <div
+                            v-for="note in notes"
+                            :key="note.id"
+                            class="rounded-xl border border-gray-200 bg-white p-4 shadow-sm"
+                        >
+                            <div class="flex items-start justify-between gap-3">
+                                <p class="whitespace-pre-wrap text-sm text-gray-900">{{ note.body }}</p>
+                                <div v-if="canManageNote(note)" class="flex shrink-0 items-center gap-1">
+                                    <button
+                                        type="button"
+                                        @click="openEditNote(note)"
+                                        class="rounded-md p-1.5 text-gray-400 hover:bg-gray-100 hover:text-primary-600 transition-colors"
+                                        :title="t('app.edit')"
+                                    >
+                                        <PencilSquareIcon class="h-4 w-4" />
+                                    </button>
+                                    <button
+                                        type="button"
+                                        @click="deleteNote(note)"
+                                        class="rounded-md p-1.5 text-gray-400 hover:bg-gray-100 hover:text-red-600 transition-colors"
+                                        :title="t('app.delete')"
+                                    >
+                                        <TrashIcon class="h-4 w-4" />
+                                    </button>
+                                </div>
+                            </div>
+                            <p class="mt-2 text-xs text-gray-500">
+                                <span v-if="note.author">{{ note.author.name }} &middot; </span>{{ formatDateTime(note.created_at) }}
+                            </p>
+                        </div>
+                    </div>
+                    <div v-else class="rounded-xl border border-gray-200 bg-white p-8 text-center shadow-sm">
+                        <ChatBubbleLeftEllipsisIcon class="mx-auto h-12 w-12 text-gray-300" />
+                        <p class="mt-2 text-sm text-gray-500">{{ t('notes.empty') }}</p>
+                        <button
+                            type="button"
+                            @click="openAddNote"
+                            class="mt-4 inline-flex items-center gap-1.5 rounded-lg bg-primary-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-primary-500 transition-colors"
+                        >
+                            <PlusIcon class="h-4 w-4" />
+                            {{ t('notes.add') }}
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -864,6 +979,40 @@ function confirmDelete() {
         <Modal :show="showUploadModal" @close="showUploadModal = false" max-width="lg">
             <h3 class="text-lg font-semibold text-gray-900 mb-4">{{ t('attachment.upload') }}</h3>
             <AttachmentUploader attachable-type="patient" :attachable-id="patient.id" />
+        </Modal>
+
+        <!-- Add / edit note modal -->
+        <Modal :show="showNoteModal" @close="closeNoteModal" max-width="lg">
+            <h3 class="text-lg font-semibold text-gray-900 mb-4">
+                {{ editingNoteId ? t('notes.edit') : t('notes.add') }}
+            </h3>
+            <textarea
+                v-model="noteBody"
+                rows="5"
+                class="block w-full rounded-lg border-gray-300 text-sm shadow-sm focus:border-primary-500 focus:ring-primary-500"
+                :placeholder="t('notes.placeholder')"
+            />
+            <div class="mt-4 flex justify-end gap-2">
+                <button
+                    type="button"
+                    @click="closeNoteModal"
+                    class="rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-semibold text-gray-700 shadow-sm hover:bg-gray-50 transition-colors"
+                >
+                    {{ t('app.cancel') }}
+                </button>
+                <button
+                    type="button"
+                    @click="submitNote"
+                    :disabled="noteSubmitting || !noteBody.trim()"
+                    class="inline-flex items-center gap-2 rounded-lg bg-primary-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-primary-500 transition-colors disabled:opacity-50"
+                >
+                    <svg v-if="noteSubmitting" class="h-4 w-4 animate-spin" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" />
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                    </svg>
+                    {{ t('notes.save') }}
+                </button>
+            </div>
         </Modal>
 
         <!-- Signature modal for dentist -->

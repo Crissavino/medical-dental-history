@@ -96,12 +96,22 @@
     "tab_anamnesis": "Anamneză",
     "tab_encounters": "Consultații",
     "tab_attachments": "Atașamente",
+    "tab_notes": "Note",
     "gdpr_export": "Export GDPR",
     "delete_confirm": "Sigur doriți să ștergeți acest pacient? Această acțiune nu poate fi anulată.",
     "search_placeholder": "Caută după nume, ID, telefon sau email...",
     "personal_info": "Informații personale",
     "contact_info": "Date de contact",
     "save_and_fill_anamnesis": "Salvează și completează istoricul medical"
+  },
+  "notes": {
+    "title": "Note",
+    "add": "Adaugă notă",
+    "edit": "Editează nota",
+    "save": "Salvează",
+    "placeholder": "Scrieți o notă generală despre acest pacient...",
+    "empty": "Nicio notă încă.",
+    "delete_confirm": "Ștergeți această notă? Această acțiune nu poate fi anulată."
   },
   "encounter": {
     "title": "Consultații",
