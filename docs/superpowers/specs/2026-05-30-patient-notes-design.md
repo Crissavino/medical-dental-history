@@ -122,8 +122,9 @@ Add `notes?: PatientNote[]` as a prop on Show.vue (distinct from `patient.notes:
 - Add `t('patient.tab_notes')` to the `tabs` computed array → it renders as the 5th tab
   button automatically (the tab bar is a `v-for`). New index = 4.
 - New panel `<div v-show="currentTab === 4">`:
-  - Header: "Notes" + **"+ Add Note"** button → opens add modal (reuse `Modal` UI component)
-    or inline textarea.
+  - Header: "Notes" + **"+ Add Note"** button → opens an add/edit modal reusing the
+    `Modal` UI component (same pattern as the attachment-upload modal). The modal holds a
+    single `body` textarea + Save/Cancel; reused for both add and edit (edit pre-fills body).
   - Note cards: `body` with `whitespace-pre-wrap`, author name + `formatDateTime(created_at)`,
     and **edit / delete** icon buttons rendered only when
     `note.user_id === page.props.auth.user.id || page.props.auth.user.role === 'admin'`.
