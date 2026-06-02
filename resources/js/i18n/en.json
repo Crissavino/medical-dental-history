@@ -138,6 +138,7 @@
     "sign_back_to_edit": "Back to edit",
     "sign_continue": "Continue",
     "sign_patient_text": "I, {name}, confirm that the treatments listed above were performed on me correctly.",
+    "sign_patient_instruments_confirm": "I confirm that the sterilized instruments were opened in front of me.",
     "sign_dentist_text": "I, Dr. {name}, certify that the listed treatments were performed as recorded.",
     "sign_use_stored": "Use my stored professional signature",
     "sign_submit": "Sign and close visit",

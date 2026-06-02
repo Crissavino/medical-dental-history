@@ -138,6 +138,7 @@
     "sign_back_to_edit": "Volver a editar",
     "sign_continue": "Continuar",
     "sign_patient_text": "Yo, {name}, confirmo que los tratamientos detallados arriba me fueron realizados correctamente.",
+    "sign_patient_instruments_confirm": "Confirmo que los instrumentos esterilizados fueron abiertos ante mí.",
     "sign_dentist_text": "Yo, Dr. {name}, certifico que los tratamientos detallados fueron ejecutados según lo registrado.",
     "sign_use_stored": "Usar mi firma profesional guardada",
     "sign_submit": "Firmar y cerrar visita",

@@ -21,12 +21,14 @@ const patientSig = ref<string | null>(null);
 const dentistSig = ref<string | null>(null);
 const useStored = ref(false);
 const submitting = ref(false);
+const instrumentsConfirmed = ref(false);
 
 function close() {
     step.value = 1;
     patientSig.value = null;
     dentistSig.value = null;
     useStored.value = false;
+    instrumentsConfirmed.value = false;
     emit('close');
 }
 
@@ -120,6 +122,10 @@ function patientName(): string {
                     <div v-else-if="step === 2" class="p-6 space-y-3">
                         <p class="text-sm">{{ t('encounter.sign_patient_text', { name: patientName() }) }}</p>
                         <SignaturePad v-model="patientSig" />
+                        <label class="flex items-start gap-2 text-sm text-gray-700 cursor-pointer">
+                            <input type="checkbox" v-model="instrumentsConfirmed" class="mt-0.5 h-4 w-4 rounded border-gray-300 text-primary-600 focus:ring-primary-500">
+                            <span>{{ t('encounter.sign_patient_instruments_confirm') }}</span>
+                        </label>
                     </div>
 
                     <!-- Step 3: Dentist signature -->
@@ -140,7 +146,7 @@ function patientName(): string {
                             <button
                                 v-if="step < 3"
                                 type="button"
-                                :disabled="step === 2 && !patientSig"
+                                :disabled="step === 2 && (!patientSig || !instrumentsConfirmed)"
                                 @click="step = (step + 1) as 1 | 2 | 3"
                                 class="rounded-lg bg-primary-600 px-4 py-2 text-sm font-semibold text-white disabled:opacity-50"
                             >

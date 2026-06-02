@@ -138,6 +138,7 @@
     "sign_back_to_edit": "Înapoi la editare",
     "sign_continue": "Continuă",
     "sign_patient_text": "Subsemnatul, {name}, confirm că tratamentele de mai sus au fost efectuate corect.",
+    "sign_patient_instruments_confirm": "Confirm că instrumentele sterilizate au fost deschise în fața mea.",
     "sign_dentist_text": "Subsemnatul, Dr. {name}, certific că tratamentele au fost efectuate conform înregistrării.",
     "sign_use_stored": "Folosește semnătura profesională stocată",
     "sign_submit": "Semnează și închide vizita",
