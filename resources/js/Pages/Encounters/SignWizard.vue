@@ -52,6 +52,15 @@ function submit() {
     );
 }
 
+function formatDate(dateStr: string): string {
+    const d = new Date(dateStr);
+    return [
+        String(d.getDate()).padStart(2, '0'),
+        String(d.getMonth() + 1).padStart(2, '0'),
+        d.getFullYear(),
+    ].join('/');
+}
+
 function patientName(): string {
     const p = props.encounter.patient;
     return `${p?.first_name ?? ''} ${p?.last_name ?? ''}`.trim();
@@ -88,7 +97,7 @@ function patientName(): string {
                         </div>
                         <div>
                             <p class="text-xs uppercase text-gray-500">{{ t('encounter.date') }}</p>
-                            <p>{{ encounter.encounter_date }}</p>
+                            <p>{{ formatDate(encounter.encounter_date) }}</p>
                         </div>
                         <div v-if="encounter.chief_complaint">
                             <p class="text-xs uppercase text-gray-500">{{ t('encounter.chief_complaint') }}</p>
