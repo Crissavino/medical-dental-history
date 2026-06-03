@@ -174,7 +174,7 @@ function rectify() {
         </div>
 
         <!-- Signed banner + rectification banners -->
-        <div v-if="encounter.status === 'completed' && encounter.dentist_signed_at" class="mb-4 rounded-xl border border-emerald-200 bg-emerald-50 p-4 text-sm text-emerald-800">
+        <div v-if="encounter.patient_signed_at && encounter.dentist_signed_at" class="mb-4 rounded-xl border border-emerald-200 bg-emerald-50 p-4 text-sm text-emerald-800">
             🔒 {{ t('encounter.sign_locked_banner', { at: formatDateTime(encounter.dentist_signed_at!) }) }}
         </div>
         <div v-if="encounter.rectifies" class="mb-4 rounded-xl border border-amber-200 bg-amber-50 p-3 text-sm text-amber-800">

@@ -334,7 +334,7 @@ const surfaces = [
                         {{ t('app.save') }}
                     </button>
                     <button
-                        v-if="encounter && encounter.status === 'in_progress' && (encounter.treatments?.length ?? 0) > 0"
+                        v-if="encounter && !(encounter.patient_signed_at && encounter.dentist_signed_at) && (encounter.treatments?.length ?? 0) > 0"
                         type="button"
                         @click="signWizardOpen = true"
                         class="inline-flex items-center gap-1.5 rounded-lg bg-emerald-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-emerald-500"
