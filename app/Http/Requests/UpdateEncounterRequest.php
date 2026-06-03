@@ -27,7 +27,7 @@ class UpdateEncounterRequest extends FormRequest
             'chief_complaint' => ['nullable', 'string', 'max:2000'],
             'clinical_notes' => ['nullable', 'string', 'max:10000'],
             'diagnosis' => ['nullable', 'string', 'max:2000'],
-            'status' => ['required', 'in:scheduled,in_progress,completed,cancelled'],
+            'status' => ['required', 'in:scheduled,in_progress'],
             'treatments' => ['nullable', 'array'],
             'treatments.*.id' => ['nullable', 'integer', 'exists:treatments,id'],
             'treatments.*.tooth_number' => ['nullable', 'string', 'max:3'],

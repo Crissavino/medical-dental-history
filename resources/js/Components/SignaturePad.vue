@@ -14,11 +14,14 @@ const emit = defineEmits<{
 const container = ref<HTMLDivElement | null>(null);
 const canvas = ref<HTMLCanvasElement | null>(null);
 let pad: SignaturePadLib | null = null;
+let resizeObserver: ResizeObserver | null = null;
 
 function resize() {
     if (!canvas.value || !container.value) return;
+    const w = container.value.clientWidth;
+    if (w === 0) return;
     const ratio = Math.max(window.devicePixelRatio || 1, 1);
-    canvas.value.width = container.value.clientWidth * ratio;
+    canvas.value.width = w * ratio;
     canvas.value.height = 180 * ratio;
     canvas.value.getContext('2d')?.scale(ratio, ratio);
     pad?.clear();
@@ -40,18 +43,18 @@ function clear() {
 defineExpose({ clear });
 
 onMounted(() => {
-    if (!canvas.value) return;
+    if (!canvas.value || !container.value) return;
     pad = new SignaturePadLib(canvas.value, {
         backgroundColor: 'rgba(255, 255, 255, 0)',
         penColor: '#1f2937',
     });
     pad.addEventListener('endStroke', handleEnd);
-    resize();
-    window.addEventListener('resize', resize);
+    resizeObserver = new ResizeObserver(() => resize());
+    resizeObserver.observe(container.value);
 });
 
 onUnmounted(() => {
-    window.removeEventListener('resize', resize);
+    resizeObserver?.disconnect();
     pad?.off();
 });
 
