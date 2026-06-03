@@ -160,6 +160,8 @@ const surfaces = [
                             >
                                 <option value="scheduled">{{ t('encounter.status_scheduled') }}</option>
                                 <option value="in_progress">{{ t('encounter.status_in_progress') }}</option>
+                                <option value="completed">{{ t('encounter.status_completed') }}</option>
+                                <option value="cancelled">{{ t('encounter.status_cancelled') }}</option>
                             </select>
                             <InputError :message="form.errors.status" class="mt-1" />
                         </div>

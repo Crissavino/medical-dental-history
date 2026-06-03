@@ -79,7 +79,8 @@ class Encounter extends Model
 
     public function isLocked(): bool
     {
-        return in_array($this->status, ['completed', 'cancelled'], true);
+        return $this->patient_signature_data !== null
+            && $this->dentist_signature_data !== null;
     }
 
     public function isSigned(): bool
