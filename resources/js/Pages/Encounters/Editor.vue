@@ -6,6 +6,7 @@ import AppLayout from '@/Components/Layout/AppLayout.vue';
 import InputLabel from '@/Components/InputLabel.vue';
 import InputError from '@/Components/InputError.vue';
 import SignWizard from '@/Pages/Encounters/SignWizard.vue';
+import ToothSelector from '@/Components/Treatment/ToothSelector.vue';
 import { useToothNotation } from '@/Composables/useToothNotation';
 import type { Encounter, Patient } from '@/types';
 import {
@@ -377,98 +378,10 @@ const surfaces = [
                         </div>
 
                         <!-- Dental chart -->
-                        <div class="space-y-6">
-                            <!-- Upper jaw -->
-                            <div>
-                                <p class="mb-2 text-center text-xs font-semibold uppercase tracking-wider text-gray-500">Upper</p>
-                                <div class="flex justify-center gap-1">
-                                    <!-- Upper Right (Q1) -->
-                                    <div class="flex gap-1">
-                                        <button
-                                            v-for="tooth in quadrants.upper_right"
-                                            :key="tooth"
-                                            type="button"
-                                            @click="selectTooth(tooth)"
-                                            :class="[
-                                                currentTreatmentIndex !== null && form.treatments[currentTreatmentIndex]?.tooth_number === tooth
-                                                    ? 'bg-primary-600 text-white border-primary-600'
-                                                    : 'bg-white text-gray-700 border-gray-300 hover:bg-primary-50 hover:border-primary-300',
-                                                'flex h-10 w-10 items-center justify-center rounded-md border text-xs font-medium transition-colors',
-                                            ]"
-                                            :title="getToothName(tooth)"
-                                        >
-                                            {{ tooth }}
-                                        </button>
-                                    </div>
-                                    <div class="w-px bg-gray-300" />
-                                    <!-- Upper Left (Q2) -->
-                                    <div class="flex gap-1">
-                                        <button
-                                            v-for="tooth in quadrants.upper_left"
-                                            :key="tooth"
-                                            type="button"
-                                            @click="selectTooth(tooth)"
-                                            :class="[
-                                                currentTreatmentIndex !== null && form.treatments[currentTreatmentIndex]?.tooth_number === tooth
-                                                    ? 'bg-primary-600 text-white border-primary-600'
-                                                    : 'bg-white text-gray-700 border-gray-300 hover:bg-primary-50 hover:border-primary-300',
-                                                'flex h-10 w-10 items-center justify-center rounded-md border text-xs font-medium transition-colors',
-                                            ]"
-                                            :title="getToothName(tooth)"
-                                        >
-                                            {{ tooth }}
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Divider -->
-                            <div class="border-t border-gray-200" />
-
-                            <!-- Lower jaw -->
-                            <div>
-                                <div class="flex justify-center gap-1">
-                                    <!-- Lower Left (Q3) -->
-                                    <div class="flex gap-1">
-                                        <button
-                                            v-for="tooth in quadrants.lower_left"
-                                            :key="tooth"
-                                            type="button"
-                                            @click="selectTooth(tooth)"
-                                            :class="[
-                                                currentTreatmentIndex !== null && form.treatments[currentTreatmentIndex]?.tooth_number === tooth
-                                                    ? 'bg-primary-600 text-white border-primary-600'
-                                                    : 'bg-white text-gray-700 border-gray-300 hover:bg-primary-50 hover:border-primary-300',
-                                                'flex h-10 w-10 items-center justify-center rounded-md border text-xs font-medium transition-colors',
-                                            ]"
-                                            :title="getToothName(tooth)"
-                                        >
-                                            {{ tooth }}
-                                        </button>
-                                    </div>
-                                    <div class="w-px bg-gray-300" />
-                                    <!-- Lower Right (Q4) -->
-                                    <div class="flex gap-1">
-                                        <button
-                                            v-for="tooth in quadrants.lower_right"
-                                            :key="tooth"
-                                            type="button"
-                                            @click="selectTooth(tooth)"
-                                            :class="[
-                                                currentTreatmentIndex !== null && form.treatments[currentTreatmentIndex]?.tooth_number === tooth
-                                                    ? 'bg-primary-600 text-white border-primary-600'
-                                                    : 'bg-white text-gray-700 border-gray-300 hover:bg-primary-50 hover:border-primary-300',
-                                                'flex h-10 w-10 items-center justify-center rounded-md border text-xs font-medium transition-colors',
-                                            ]"
-                                            :title="getToothName(tooth)"
-                                        >
-                                            {{ tooth }}
-                                        </button>
-                                    </div>
-                                </div>
-                                <p class="mt-2 text-center text-xs font-semibold uppercase tracking-wider text-gray-500">Lower</p>
-                            </div>
-                        </div>
+                        <ToothSelector
+                            :model-value="currentTreatmentIndex !== null ? (form.treatments[currentTreatmentIndex]?.tooth_number || null) : null"
+                            @update:model-value="(v) => v !== null && selectTooth(v)"
+                        />
                     </div>
                 </div>
             </Transition>
