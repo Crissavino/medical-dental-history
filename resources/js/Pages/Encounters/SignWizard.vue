@@ -47,6 +47,7 @@ function submit() {
             use_stored_dentist_signature: useStored.value,
         } as any,
         {
+            onSuccess: () => close(),
             onFinish: () => { submitting.value = false; },
         }
     );
