@@ -55,7 +55,12 @@ const statuses: { value: Treatment['status']; label: string }[] = [
 
 function onToothSelected(value: string | null) {
     form.tooth_number = value ?? '';
-    showToothSelector.value = false;
+    form.surface = '';
+    if (!value) showToothSelector.value = false; // close on deselect only
+}
+
+function onSurfaceSelected(value: string | null) {
+    form.surface = value ?? '';
 }
 
 function submit() {
@@ -117,7 +122,10 @@ function submit() {
             <div v-if="showToothSelector" class="mt-2">
                 <ToothSelector
                     :model-value="form.tooth_number || null"
+                    :surface="form.surface || null"
                     @update:model-value="onToothSelected"
+                    @update:surface="onSurfaceSelected"
+                    @surface-selected="showToothSelector = false"
                 />
             </div>
         </div>

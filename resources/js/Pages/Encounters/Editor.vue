@@ -87,10 +87,24 @@ function openToothSelector(index: number) {
     showToothSelector.value = true;
 }
 
-function selectTooth(toothNumber: string) {
+function selectTooth(toothNumber: string | null) {
     if (currentTreatmentIndex.value !== null) {
-        form.treatments[currentTreatmentIndex.value].tooth_number = toothNumber;
+        form.treatments[currentTreatmentIndex.value].tooth_number = toothNumber ?? '';
+        if (!toothNumber) form.treatments[currentTreatmentIndex.value].surface = '';
     }
+    if (!toothNumber) {
+        showToothSelector.value = false;
+        currentTreatmentIndex.value = null;
+    }
+}
+
+function selectSurface(surface: string | null) {
+    if (currentTreatmentIndex.value !== null) {
+        form.treatments[currentTreatmentIndex.value].surface = surface ?? '';
+    }
+}
+
+function onSurfaceConfirmed() {
     showToothSelector.value = false;
     currentTreatmentIndex.value = null;
 }
@@ -365,7 +379,7 @@ const surfaces = [
                 leave-to-class="opacity-0"
             >
                 <div v-if="showToothSelector" class="fixed inset-0 z-50 flex items-center justify-center bg-gray-900/50 p-4">
-                    <div class="w-full max-w-3xl rounded-xl bg-white p-6 shadow-xl">
+                    <div class="w-full max-w-4xl rounded-xl bg-white p-6 shadow-xl">
                         <div class="flex items-center justify-between mb-4">
                             <h3 class="text-lg font-semibold text-gray-900">{{ t('treatment.select_tooth') }}</h3>
                             <button
@@ -380,7 +394,10 @@ const surfaces = [
                         <!-- Dental chart -->
                         <ToothSelector
                             :model-value="currentTreatmentIndex !== null ? (form.treatments[currentTreatmentIndex]?.tooth_number || null) : null"
-                            @update:model-value="(v) => v !== null && selectTooth(v)"
+                            :surface="currentTreatmentIndex !== null ? (form.treatments[currentTreatmentIndex]?.surface || null) : null"
+                            @update:model-value="selectTooth"
+                            @update:surface="selectSurface"
+                            @surface-selected="onSurfaceConfirmed"
                         />
                     </div>
                 </div>
