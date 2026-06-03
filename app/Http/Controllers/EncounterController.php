@@ -151,13 +151,14 @@ class EncounterController extends Controller
 
         DB::transaction(function () use ($request, $encounter, $patientSignedAt, $dentistSignedAt) {
             $locked = Encounter::where('id', $encounter->id)
-                ->where('status', 'in_progress')
+                ->whereNull('patient_signature_data')
+                ->whereNull('dentist_signature_data')
                 ->lockForUpdate()
                 ->first();
 
             if (!$locked) {
                 // already signed by a concurrent request
-                abort(409, 'Encounter is no longer in_progress.');
+                abort(409, 'Encounter is already signed.');
             }
 
             $treatments = $locked->treatments()->orderBy('id')->get([
