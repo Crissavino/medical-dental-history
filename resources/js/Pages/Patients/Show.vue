@@ -805,6 +805,7 @@ function confirmDelete() {
                                         <div>
                                             <div class="flex items-center gap-2">
                                                 <CalendarDaysIcon class="h-4 w-4 text-gray-400" />
+                                                <span class="text-xs text-gray-400 font-mono">#{{ encounter.id }}</span>
                                                 <span class="text-sm font-medium text-gray-900">{{ formatDate(encounter.encounter_date) }}</span>
                                                 <span
                                                     :class="[statusColors[encounter.status], 'inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium']"
