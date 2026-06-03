@@ -81,6 +81,14 @@ class EncounterController extends Controller
 
         return Inertia::render('Encounters/Show', [
             'encounter' => $encounter,
+            'currentUser' => [
+                'id' => auth()->id(),
+                'name' => auth()->user()->name,
+                'has_signature' => (bool) auth()->user()->signature_data,
+            ],
+            'can' => [
+                'sign' => auth()->user()->can('sign', $encounter),
+            ],
         ]);
     }
 

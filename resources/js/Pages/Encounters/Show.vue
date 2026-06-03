@@ -3,6 +3,7 @@ import { ref } from 'vue';
 import { Head, Link, router } from '@inertiajs/vue3';
 import { useI18n } from 'vue-i18n';
 import AppLayout from '@/Components/Layout/AppLayout.vue';
+import SignWizard from '@/Pages/Encounters/SignWizard.vue';
 import { useToothNotation } from '@/Composables/useToothNotation';
 import type { Encounter } from '@/types';
 import {
@@ -22,9 +23,12 @@ const { getToothName } = useToothNotation();
 
 const props = defineProps<{
     encounter: Encounter;
+    currentUser: { id: number; name: string; has_signature: boolean };
+    can: { sign: boolean };
 }>();
 
 const showDeleteModal = ref(false);
+const signWizardOpen = ref(false);
 
 const statusColors: Record<string, string> = {
     scheduled: 'bg-blue-100 text-blue-800',
@@ -142,6 +146,14 @@ function rectify() {
                     </button>
                 </div>
                 <div v-else class="flex flex-wrap gap-2">
+                    <button
+                        v-if="can.sign && (encounter.treatments?.length ?? 0) > 0"
+                        type="button"
+                        @click="signWizardOpen = true"
+                        class="inline-flex items-center gap-1.5 rounded-lg bg-emerald-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-emerald-500 transition-colors"
+                    >
+                        {{ t('encounter.close_and_sign') }}
+                    </button>
                     <Link
                         :href="route('encounters.edit', encounter.id)"
                         class="inline-flex items-center gap-1.5 rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 transition-colors"
@@ -354,5 +366,12 @@ function rectify() {
                 </div>
             </Transition>
         </Teleport>
+
+        <SignWizard
+            :encounter="encounter"
+            :open="signWizardOpen"
+            :current-user="currentUser"
+            @close="signWizardOpen = false"
+        />
     </AppLayout>
 </template>
