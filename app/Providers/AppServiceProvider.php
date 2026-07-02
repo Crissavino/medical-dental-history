@@ -5,6 +5,7 @@ namespace App\Providers;
 use App\Models\AnamnesisVersion;
 use App\Models\Attachment;
 use App\Models\Encounter;
+use App\Models\ExtractionConsent;
 use App\Models\Patient;
 use App\Models\Treatment;
 use App\Observers\AuditObserver;
@@ -39,5 +40,6 @@ class AppServiceProvider extends ServiceProvider
         Encounter::observe(AuditObserver::class);
         Treatment::observe(AuditObserver::class);
         Attachment::observe(AuditObserver::class);
+        ExtractionConsent::observe(AuditObserver::class);
     }
 }

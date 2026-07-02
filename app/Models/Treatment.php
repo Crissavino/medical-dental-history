@@ -16,6 +16,7 @@ class Treatment extends Model
         'encounter_id',
         'tooth_number',
         'treatment_code',
+        'is_extraction',
         'description',
         'notes',
         'surface',
@@ -27,6 +28,7 @@ class Treatment extends Model
     {
         return [
             'cost' => 'decimal:2',
+            'is_extraction' => 'boolean',
         ];
     }
 

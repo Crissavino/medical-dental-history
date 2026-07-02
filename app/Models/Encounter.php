@@ -77,6 +77,17 @@ class Encounter extends Model
         return $this->hasOne(self::class, 'rectifies_encounter_id');
     }
 
+    public function extractionConsent(): HasOne
+    {
+        return $this->hasOne(ExtractionConsent::class);
+    }
+
+    public function hasUnconsentedExtractions(): bool
+    {
+        return $this->treatments()->where('is_extraction', true)->exists()
+            && !$this->extractionConsent()->exists();
+    }
+
     public function isLocked(): bool
     {
         return $this->patient_signature_data !== null
