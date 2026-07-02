@@ -4,6 +4,7 @@ use App\Http\Controllers\AnamnesisController;
 use App\Http\Controllers\AttachmentController;
 use App\Http\Controllers\AuditLogController;
 use App\Http\Controllers\EncounterController;
+use App\Http\Controllers\ExtractionConsentController;
 use App\Http\Controllers\GdprExportController;
 use App\Http\Controllers\IntakeController;
 use App\Http\Controllers\PatientController;
@@ -100,6 +101,8 @@ Route::middleware('auth')->group(function () {
         ->name('encounters.rectify');
     Route::get('/encounters/{encounter}/pdf', [EncounterController::class, 'pdf'])
         ->name('encounters.pdf');
+    Route::post('/encounters/{encounter}/extraction-consent', [ExtractionConsentController::class, 'store'])
+        ->name('extraction-consents.store');
 
     // Treatments (nested under encounter)
     Route::post('/encounters/{encounter}/treatments', [TreatmentController::class, 'store'])

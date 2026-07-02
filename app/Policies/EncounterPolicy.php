@@ -44,6 +44,17 @@ class EncounterPolicy
             && $user->hasRole('admin', 'dentist');
     }
 
+    public function consentExtraction(User $user, Encounter $encounter): bool
+    {
+        return !$encounter->isLocked()
+            && $user->hasRole('admin', 'dentist', 'assistant');
+    }
+
+    public function downloadExtractionConsentPdf(User $user, Encounter $encounter): bool
+    {
+        return $user->hasRole('admin', 'dentist');
+    }
+
     public function rectify(User $user, Encounter $encounter): bool
     {
         return $encounter->status === 'completed'
