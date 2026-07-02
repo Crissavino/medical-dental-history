@@ -16,6 +16,9 @@ class SignEncounterRequest extends FormRequest
         if ($encounter->isLocked()) {
             return false;
         }
+        if ($encounter->status !== 'in_progress') {
+            return false;
+        }
         return $this->user()?->hasRole('admin', 'dentist') ?? false;
     }
 
@@ -36,6 +39,12 @@ class SignEncounterRequest extends FormRequest
                 $validator->errors()->add(
                     'treatments',
                     'Encounter must have at least one treatment before signing.'
+                );
+            }
+            if ($encounter && $encounter->hasUnconsentedExtractions()) {
+                $validator->errors()->add(
+                    'extraction_consent',
+                    'Extraction consent must be signed before closing this encounter.'
                 );
             }
             $useStored = (bool) $this->input('use_stored_dentist_signature');
