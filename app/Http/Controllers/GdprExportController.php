@@ -4,13 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Models\Patient;
 use App\Services\ClinicalHistoryPdfService;
+use App\Services\ExtractionConsentPdfService;
 use Illuminate\Support\Facades\Storage;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use ZipArchive;
 
 class GdprExportController extends Controller
 {
-    public function export(Patient $patient, ClinicalHistoryPdfService $clinicalHistory): StreamedResponse
+    public function export(Patient $patient, ClinicalHistoryPdfService $clinicalHistory, ExtractionConsentPdfService $extractionConsentPdf): StreamedResponse
     {
         $this->authorize('export', $patient);
 
@@ -18,6 +19,7 @@ class GdprExportController extends Controller
             'anamnesisVersions',
             'encounters.treatments',
             'encounters.provider:id,name',
+            'encounters.extractionConsent',
             'attachments',
         ]);
 
@@ -80,6 +82,15 @@ class GdprExportController extends Controller
             $filePath = Storage::disk('local')->path($attachment->file_path);
             if (file_exists($filePath)) {
                 $zip->addFile($filePath, 'attachments/' . $attachment->file_name);
+            }
+        }
+
+        foreach ($patient->encounters as $encounter) {
+            if ($encounter->extractionConsent) {
+                $zip->addFromString(
+                    "extraction-consents/encounter-{$encounter->id}.pdf",
+                    $extractionConsentPdf->generate($encounter->extractionConsent)->output()
+                );
             }
         }
 
