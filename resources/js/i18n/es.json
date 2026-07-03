@@ -169,7 +169,8 @@
     "status_in_progress": "En curso",
     "status_completed": "Completado",
     "no_treatments": "No hay tratamientos agregados aún",
-    "select_tooth": "Seleccionar pieza"
+    "select_tooth": "Seleccionar pieza",
+    "is_extraction": "Es una extracción"
   },
   "attachment": {
     "title": "Adjuntos",
@@ -183,6 +184,15 @@
     "delete_confirm": "¿Estás seguro/a de que querés eliminar este adjunto?",
     "drag_drop": "Arrastrá y soltá los archivos aquí o hacé clic para explorar",
     "max_size": "Tamaño máximo: 10MB"
+  },
+  "extractionConsent": {
+    "title": "Consentimiento informado de extracción",
+    "text": "Yo, el/la abajo firmante, declaro haber sido informado/a de forma clara por el/la profesional tratante sobre la naturaleza del procedimiento de extracción dentaria indicado, incluyendo: el motivo de la extracción, el tipo de anestesia a utilizar, las alternativas de tratamiento disponibles, y los riesgos y complicaciones posibles — entre ellos dolor, inflamación, sangrado, infección, alveolitis seca, lesión de dientes o restauraciones adyacentes, fractura radicular con posible fragmento residual, parestesia transitoria o permanente de labio, mentón o lengua, comunicación oro-sinusal, fractura mandibular, necesidad de tratamiento adicional, y reacciones a la anestesia. He podido formular las preguntas que consideré necesarias y las mismas fueron respondidas satisfactoriamente. Entiendo que la odontología no es una ciencia exacta y que no se garantizan resultados específicos. Presto mi consentimiento libre, informado y voluntario para la realización de dicho procedimiento.",
+    "agree": "He leído y entiendo este consentimiento informado",
+    "sign_button": "Firmar consentimiento",
+    "pending_banner": "Este encuentro tiene un tratamiento de extracción pendiente de consentimiento informado.",
+    "signed_at": "Consentimiento firmado el {at}",
+    "download_pdf": "Descargar PDF del consentimiento"
   },
   "anamnesis": {
     "title": "Historia Clínica / Anamnesis",

@@ -169,7 +169,8 @@
     "status_in_progress": "În desfășurare",
     "status_completed": "Finalizat",
     "no_treatments": "Niciun tratament adăugat încă",
-    "select_tooth": "Selectează dinţele"
+    "select_tooth": "Selectează dinţele",
+    "is_extraction": "Aceasta este o extracție"
   },
   "attachment": {
     "title": "Atașamente",
@@ -183,6 +184,15 @@
     "delete_confirm": "Sigur doriți să ștergeți acest atașament?",
     "drag_drop": "Trageți și plasați fișierele aici sau faceți clic pentru a naviga",
     "max_size": "Dimensiune maximă: 10MB"
+  },
+  "extractionConsent": {
+    "title": "Consimțământ informat pentru extracție",
+    "text": "Subsemnatul/subsemnata declar că am fost informat/informată în mod clar de către medicul curant cu privire la natura procedurii de extracție dentară indicate, inclusiv: motivul extracției, tipul de anestezie ce urmează a fi utilizat, alternativele de tratament disponibile, precum și riscurile și complicațiile posibile — printre care durere, inflamație, sângerare, infecție, alveolită uscată, lezarea dinților sau restaurărilor adiacente, fractură radiculară cu posibil fragment restant, parestezie tranzitorie sau permanentă a buzei, bărbiei sau limbii, comunicare oro-sinuzală, fractură mandibulară, necesitatea unui tratament suplimentar și reacții la anestezie. Am avut posibilitatea de a adresa întrebările pe care le-am considerat necesare, iar acestea au primit răspunsuri satisfăcătoare. Înțeleg că stomatologia nu este o știință exactă și că nu se garantează rezultate specifice. Îmi acord consimțământul liber, informat și voluntar pentru efectuarea acestei proceduri.",
+    "agree": "Am citit și înțeleg acest consimțământ informat",
+    "sign_button": "Semnează consimțământul",
+    "pending_banner": "Această vizită are un tratament de extracție care așteaptă consimțământul informat.",
+    "signed_at": "Consimțământ semnat la {at}",
+    "download_pdf": "Descarcă PDF-ul consimțământului"
   },
   "anamnesis": {
     "title": "Fișa de Anamneză / Istoric Medical",
