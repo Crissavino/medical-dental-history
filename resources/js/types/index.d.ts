@@ -226,6 +226,16 @@ export interface Encounter {
     rectifies?: { id: number; encounter_date: string } | null;
     rectifier?: { id: number; encounter_date: string; rectifies_encounter_id: number } | null;
     dentist_signer?: { id: number; name: string } | null;
+    extraction_consent?: ExtractionConsent | null;
+}
+
+export interface ExtractionConsent {
+    id: number;
+    encounter_id: number;
+    language: 'en' | 'ro' | 'es';
+    patient_signature_data: string;
+    signed_at: string;
+    recorded_by: number | null;
 }
 
 export interface Treatment {
