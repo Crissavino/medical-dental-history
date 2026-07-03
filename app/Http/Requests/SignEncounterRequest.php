@@ -16,9 +16,6 @@ class SignEncounterRequest extends FormRequest
         if ($encounter->isLocked()) {
             return false;
         }
-        if ($encounter->status !== 'in_progress') {
-            return false;
-        }
         return $this->user()?->hasRole('admin', 'dentist') ?? false;
     }
 
