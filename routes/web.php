@@ -103,6 +103,8 @@ Route::middleware('auth')->group(function () {
         ->name('encounters.pdf');
     Route::post('/encounters/{encounter}/extraction-consent', [ExtractionConsentController::class, 'store'])
         ->name('extraction-consents.store');
+    Route::get('/extraction-consents/{extractionConsent}/pdf', [ExtractionConsentController::class, 'pdf'])
+        ->name('extraction-consents.pdf');
 
     // Treatments (nested under encounter)
     Route::post('/encounters/{encounter}/treatments', [TreatmentController::class, 'store'])
