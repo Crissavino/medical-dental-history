@@ -238,6 +238,7 @@ export interface Treatment {
     surface?: 'mesial' | 'distal' | 'buccal' | 'lingual' | 'occlusal' | 'incisal';
     cost?: number;
     status: 'planned' | 'in_progress' | 'completed';
+    is_extraction?: boolean;
     created_at: string;
     updated_at: string;
     encounter?: Encounter;

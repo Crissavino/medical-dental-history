@@ -27,6 +27,7 @@ class StoreEncounterRequest extends FormRequest
             'treatments.*.surface' => ['nullable', 'string', 'in:mesial,distal,buccal,lingual,occlusal,incisal'],
             'treatments.*.cost' => ['nullable', 'numeric', 'min:0', 'max:999999.99'],
             'treatments.*.status' => ['required_with:treatments.*', 'in:planned,in_progress,completed'],
+            'treatments.*.is_extraction' => ['nullable', 'boolean'],
         ];
     }
 }

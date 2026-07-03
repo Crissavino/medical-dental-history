@@ -42,6 +42,7 @@ interface TreatmentForm {
     surface: string;
     cost: string;
     status: 'planned' | 'in_progress' | 'completed';
+    is_extraction: boolean;
 }
 
 const form = useForm({
@@ -60,6 +61,7 @@ const form = useForm({
         surface: t.surface || '',
         cost: t.cost !== undefined && t.cost !== null ? String(t.cost) : '',
         status: t.status,
+        is_extraction: t.is_extraction ?? false,
     })) as TreatmentForm[],
 });
 
@@ -75,6 +77,7 @@ function addTreatment() {
         surface: '',
         cost: '',
         status: 'planned',
+        is_extraction: false,
     });
 }
 
@@ -242,6 +245,14 @@ const surfaces = [
                                     <TrashIcon class="h-4 w-4" />
                                 </button>
                             </div>
+                            <label class="mb-4 flex items-center gap-2 text-sm text-gray-700 cursor-pointer">
+                                <input
+                                    v-model="treatment.is_extraction"
+                                    type="checkbox"
+                                    class="h-4 w-4 rounded border-gray-300 text-primary-600 focus:ring-primary-500"
+                                />
+                                {{ t('treatment.is_extraction') }}
+                            </label>
                             <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
                                 <div>
                                     <InputLabel :value="t('treatment.tooth_number')" />
