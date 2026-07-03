@@ -77,6 +77,7 @@ class EncounterController extends Controller
             'rectifier:id,encounter_date,rectifies_encounter_id',
             'treatments',
             'attachments.uploader:id,name',
+            'extractionConsent',
         ]);
 
         return Inertia::render('Encounters/Show', [
@@ -88,6 +89,7 @@ class EncounterController extends Controller
             ],
             'can' => [
                 'sign' => auth()->user()->can('sign', $encounter),
+                'consentExtraction' => auth()->user()->can('consentExtraction', $encounter),
             ],
         ]);
     }

@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 import { Head, Link, router } from '@inertiajs/vue3';
 import { useI18n } from 'vue-i18n';
 import AppLayout from '@/Components/Layout/AppLayout.vue';
 import SignWizard from '@/Pages/Encounters/SignWizard.vue';
+import ExtractionConsentModal from '@/Components/Encounter/ExtractionConsentModal.vue';
 import { useToothNotation } from '@/Composables/useToothNotation';
 import type { Encounter } from '@/types';
 import {
@@ -24,11 +25,12 @@ const { getToothName } = useToothNotation();
 const props = defineProps<{
     encounter: Encounter;
     currentUser: { id: number; name: string; has_signature: boolean };
-    can: { sign: boolean };
+    can: { sign: boolean; consentExtraction: boolean };
 }>();
 
 const showDeleteModal = ref(false);
 const signWizardOpen = ref(false);
+const extractionConsentModalOpen = ref(false);
 
 const statusColors: Record<string, string> = {
     scheduled: 'bg-blue-100 text-blue-800',
@@ -42,6 +44,10 @@ const treatmentStatusColors: Record<string, string> = {
     in_progress: 'bg-yellow-100 text-yellow-800',
     completed: 'bg-green-100 text-green-800',
 };
+
+const hasUnconsentedExtractions = computed(() =>
+    (props.encounter.treatments ?? []).some((t) => t.is_extraction) && !props.encounter.extraction_consent
+);
 
 function formatDate(dateStr: string): string {
     return new Date(dateStr).toLocaleDateString(undefined, {
@@ -147,7 +153,7 @@ function rectify() {
                 </div>
                 <div v-else class="flex flex-wrap gap-2">
                     <button
-                        v-if="can.sign && (encounter.treatments?.length ?? 0) > 0"
+                        v-if="can.sign && (encounter.treatments?.length ?? 0) > 0 && !hasUnconsentedExtractions"
                         type="button"
                         @click="signWizardOpen = true"
                         class="inline-flex items-center gap-1.5 rounded-lg bg-emerald-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-emerald-500 transition-colors"
@@ -182,6 +188,27 @@ function rectify() {
         </div>
         <div v-if="encounter.rectifier" class="mb-4 rounded-xl border border-gray-200 bg-gray-50 p-3 text-sm text-gray-700">
             {{ t('encounter.rectified_by_banner', { id: encounter.rectifier.id, at: encounter.rectifier.encounter_date }) }}
+        </div>
+
+        <div v-if="hasUnconsentedExtractions" class="mb-4 flex flex-wrap items-center justify-between gap-3 rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-800">
+            <span>⚠️ {{ t('extractionConsent.pending_banner') }}</span>
+            <button
+                v-if="can.consentExtraction"
+                type="button"
+                @click="extractionConsentModalOpen = true"
+                class="inline-flex items-center gap-1.5 rounded-lg bg-amber-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-amber-500 transition-colors"
+            >
+                {{ t('extractionConsent.sign_button') }}
+            </button>
+        </div>
+        <div v-else-if="encounter.extraction_consent" class="mb-4 flex flex-wrap items-center justify-between gap-3 rounded-xl border border-gray-200 bg-gray-50 p-4 text-sm text-gray-700">
+            <span>✅ {{ t('extractionConsent.signed_at', { at: formatDateTime(encounter.extraction_consent.signed_at) }) }}</span>
+            <a
+                :href="route('extraction-consents.pdf', encounter.extraction_consent.id)"
+                class="inline-flex items-center gap-1.5 rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50"
+            >
+                {{ t('extractionConsent.download_pdf') }}
+            </a>
         </div>
 
         <div class="grid grid-cols-1 gap-6 lg:grid-cols-3">
@@ -372,6 +399,12 @@ function rectify() {
             :open="signWizardOpen"
             :current-user="currentUser"
             @close="signWizardOpen = false"
+        />
+
+        <ExtractionConsentModal
+            :encounter-id="encounter.id"
+            :open="extractionConsentModalOpen"
+            @close="extractionConsentModalOpen = false"
         />
     </AppLayout>
 </template>
