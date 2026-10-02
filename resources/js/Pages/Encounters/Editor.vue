@@ -338,6 +338,17 @@ const surfaces = [
                     <div v-else class="p-6 text-center text-sm text-gray-500">
                         {{ t('treatment.no_treatments') }}
                     </div>
+
+                    <div v-if="form.treatments.length > 0" class="border-t border-gray-200 px-6 py-4">
+                        <button
+                            type="button"
+                            @click="addTreatment"
+                            class="inline-flex items-center gap-1.5 rounded-lg bg-primary-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-primary-500 transition-colors"
+                        >
+                            <PlusIcon class="h-4 w-4" />
+                            {{ t('encounter.add_treatment') }}
+                        </button>
+                    </div>
                 </div>
 
                 <!-- Form actions -->
